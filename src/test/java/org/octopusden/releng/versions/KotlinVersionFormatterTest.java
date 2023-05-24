@@ -10,9 +10,9 @@ class KotlinVersionFormatterTest {
     private static final String SIMPLE_FORMAT2 = "$major.$minor.$service-$fix";
     private static final String BUILD_VERSION_FORMAT = "$major.$minor.$service.$fix-$build";
     private static final String COMPONENT_FORMAT = "MyComponent.$major.$minor.$service";
-    private static final String CARDS_BRANCH_FORMAT = "CARDS_$major02_$minorCards_$serviceCardsBranch";
-    private static final String CARDS_BRANCH_FORMAT_WITH_BRACES = "CARDS_${major02}_$minorCards_$serviceCardsBranch";
-    private static final String CARDS_FORMAT = "$major02.$minorCards.$serviceCards";
+    private static final String BRANCH_FORMAT = "C_$major02_$minorC_$serviceCBranch";
+    private static final String BRANCH_FORMAT_WITH_BRACES = "C_${major02}_$minorC_$serviceCBranch";
+    private static final String FORMAT = "$major02.$minorC.$serviceC";
 
     private VersionFormatter formatter = new KotlinVersionFormatter();
 
@@ -52,11 +52,11 @@ class KotlinVersionFormatterTest {
     }
 
     @Test
-    void testCardsBranchFormat() {
-        assertEquals("CARDS_03_44_30", formatter.format(CARDS_BRANCH_FORMAT, NumericVersion.parse("3.44.29.2-2")));
-        assertEquals("CARDS_03_44_30", formatter.format(CARDS_BRANCH_FORMAT_WITH_BRACES, NumericVersion.parse("3.44.29.2-2")));
-        assertEquals("CARDS_03_44_30", formatter.format(CARDS_BRANCH_FORMAT, NumericVersion.parse("3.44.30.2-2")));
-        assertEquals("CARDS_03_44_30", formatter.format(CARDS_BRANCH_FORMAT, NumericVersion.parse("03.44.31.15-35"))); //-> major
+    void testBranchFormat() {
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("3.44.29.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT_WITH_BRACES, NumericVersion.parse("3.44.29.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("3.44.30.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("03.44.31.15-35"))); //-> major
     }
 
     @Test
@@ -70,15 +70,15 @@ class KotlinVersionFormatterTest {
     }
 
     @Test
-    void testMatchesCardsVersionFormat() {
-        assertTrue(formatter.matchesFormat(CARDS_FORMAT, "02.03.35"));
-        assertTrue(formatter.matchesFormat("$versionPrefix.$baseVersionFormat", CARDS_FORMAT, "akBARS", "akBARS.02.03.35"));
+    void testMatchesVersionFormat() {
+        assertTrue(formatter.matchesFormat(FORMAT, "02.03.35"));
+        assertTrue(formatter.matchesFormat("$versionPrefix.$baseVersionFormat", FORMAT, "akBARS", "akBARS.02.03.35"));
     }
 
     @Test
-    void testMajorCardsWithMajor() {
-        assert formatter.matchesFormat("$major.$minorCards.$service", "3.38.3");
-        assert formatter.matchesFormat("$major.$minorCards.$serviceCards", "3.38.04");
+    void testMajorCWithMajor() {
+        assert formatter.matchesFormat("$major.$minorC.$service", "3.38.3");
+        assert formatter.matchesFormat("$major.$minorC.$serviceC", "3.38.04");
     }
 
     @Test

@@ -7,12 +7,12 @@ class KotlinVersionFormatter : VersionFormatter {
 
     // TODO: make static
     val PREDEFINED_VARIABLES_LIST: List<Pair<String, (IVersionInfo) -> String>> = listOf(
-            "serviceCardsBranch" to { version: IVersionInfo -> calculateServiceCardsBranch(version).offsetFormat(2) },
-            "serviceCards" to { version: IVersionInfo -> calculateServiceCards(version).offsetFormat(2) },
+            "serviceCBranch" to { version: IVersionInfo -> calculateServiceCBranch(version).offsetFormat(2) },
+            "serviceC" to { version: IVersionInfo -> calculateServiceC(version).offsetFormat(2) },
             "service02" to { version: IVersionInfo -> version.service.offsetFormat(2) },
             "service" to { version: IVersionInfo -> version.service.toString() },
 
-            "minorCards" to { version: IVersionInfo -> calculateMinorCards(version).offsetFormat(2) },
+            "minorC" to { version: IVersionInfo -> calculateMinorC(version).offsetFormat(2) },
             "minor02" to { version: IVersionInfo -> version.minor.offsetFormat(2) },
             "minor" to { version: IVersionInfo -> version.minor.toString() },
 
@@ -40,15 +40,15 @@ class KotlinVersionFormatter : VersionFormatter {
             "cvsCompatibleVersion" to { _: String, version: String -> version.replace(".", "-") }
     )
 
-    private fun calculateServiceCardsBranch(version: IVersionInfo): Int {
-        val i = (calculateServiceCards(version) / 10)
+    private fun calculateServiceCBranch(version: IVersionInfo): Int {
+        val i = (calculateServiceC(version) / 10)
         return i * 10
     }
 
-    private fun calculateMinorCards(version: IVersionInfo) = if (version.service == 99) version.minor + 1 else version.minor
+    private fun calculateMinorC(version: IVersionInfo) = if (version.service == 99) version.minor + 1 else version.minor
 
 
-    private fun calculateServiceCards(version: IVersionInfo) = if (version.service == 99) 0 else version.service + 1
+    private fun calculateServiceC(version: IVersionInfo) = if (version.service == 99) 0 else version.service + 1
 
 
     override fun format(format: String, version: IVersionInfo): String =
@@ -70,9 +70,9 @@ class KotlinVersionFormatter : VersionFormatter {
     }
 
     fun getPatchedFormat(format: String) = format
-            .replace("\$serviceCardsBranch", "\$service02")
-            .replace("\$serviceCards", "\$service02")
-            .replace("\$minorCards", "\$minor02")
+            .replace("\$serviceCBranch", "\$service02")
+            .replace("\$serviceC", "\$service02")
+            .replace("\$minorC", "\$minor02")
 
 
     override fun matchesNonStrictFormat(format: String, version: String): Boolean {
