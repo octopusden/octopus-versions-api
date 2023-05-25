@@ -16,8 +16,8 @@ class DefaultBuildVersionPatternCalculatorTest {
   }
 
   @Test
-  void testCardsFormat() {
-    assertEquals("(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<service>\\d+)\\.(?<fix>\\d+)",  calculator.calculate("$major02.$minorCards.$serviceCards.$fix02"));
+  void testFormat() {
+    assertEquals("(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<service>\\d+)\\.(?<fix>\\d+)",  calculator.calculate("$major02.$minorC.$serviceC.$fix02"));
   }
 
 }
