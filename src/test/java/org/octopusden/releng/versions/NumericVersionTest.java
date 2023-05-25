@@ -69,30 +69,30 @@ class NumericVersionTest {
     }
 
     @Test
-    void testCardsVersions() {
+    void testVersions() {
         assertThat(version("03.37.30"), greaterThan(version("03.36.20.19")));
         assertThat(version("03.37.30.13"), lessThan(version("03.37.30.19")));
     }
 
     @Test
-    void testCardsMinorVersion() {
-        assertCardsMinorVersionCalculation("03.45.00", "03.44.99.10");
-        assertCardsMinorVersionCalculation("03.45.01", "03.45.00.01");
-        assertCardsMinorVersionCalculation("03.45.02", "03.45.01.01");
-        assertCardsMinorVersionCalculation("03.45.10", "03.45.09.10");
-        assertCardsMinorVersionCalculation("03.45.11", "03.45.10.00");
-        assertCardsMinorVersionCalculation("03.45.12", "03.45.11.11");
-        assertCardsMinorVersionCalculation("03.45.20", "03.45.19.10");
-        assertCardsMinorVersionCalculation("03.45.21", "03.45.20.01");
-        assertCardsMinorVersionCalculation("03.45.22", "03.45.21.01");
-        assertCardsMinorVersionCalculation("03.45.30", "03.45.29.01");
-        assertCardsMinorVersionCalculation("03.45.31", "03.45.30.01");
-        assertCardsMinorVersionCalculation("03.45.32", "03.45.31.01");
-        assertCardsMinorVersionCalculation("03.45.33", "03.45.32.12");
+    void testMinorVersion() {
+        assertMinorVersionCalculation("03.45.00", "03.44.99.10");
+        assertMinorVersionCalculation("03.45.01", "03.45.00.01");
+        assertMinorVersionCalculation("03.45.02", "03.45.01.01");
+        assertMinorVersionCalculation("03.45.10", "03.45.09.10");
+        assertMinorVersionCalculation("03.45.11", "03.45.10.00");
+        assertMinorVersionCalculation("03.45.12", "03.45.11.11");
+        assertMinorVersionCalculation("03.45.20", "03.45.19.10");
+        assertMinorVersionCalculation("03.45.21", "03.45.20.01");
+        assertMinorVersionCalculation("03.45.22", "03.45.21.01");
+        assertMinorVersionCalculation("03.45.30", "03.45.29.01");
+        assertMinorVersionCalculation("03.45.31", "03.45.30.01");
+        assertMinorVersionCalculation("03.45.32", "03.45.31.01");
+        assertMinorVersionCalculation("03.45.33", "03.45.32.12");
     }
 
-    private void assertCardsMinorVersionCalculation(String minorVersion, String releaseVersion) {
-        String actual = NumericVersion.parse(releaseVersion).formatVersion("$major02.$minorCards.$serviceCards");
+    private void assertMinorVersionCalculation(String minorVersion, String releaseVersion) {
+        String actual = NumericVersion.parse(releaseVersion).formatVersion("$major02.$minorC.$serviceC");
         assertEquals(minorVersion, actual, String.format("|%s|%s|%s|", releaseVersion, minorVersion.substring(0, 7), minorVersion));
     }
 

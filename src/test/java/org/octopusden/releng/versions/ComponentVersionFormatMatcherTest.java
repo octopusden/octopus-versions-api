@@ -10,7 +10,7 @@ class ComponentVersionFormatMatcherTest {
     private static final ComponentVersionFormatMatcher matcher = new ComponentVersionFormatMatcher();
     private ComponentVersionFormat MODEL_VERSION_FORMAT = ComponentVersionFormat.create("Model.$major.$minor.$service",
             "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major02.$minor02");
-    private ComponentVersionFormat CARDS_VERSION_FORMAT = ComponentVersionFormat.create("$major02.$minorCards.$serviceCards",
+    private ComponentVersionFormat VERSION_FORMAT = ComponentVersionFormat.create("$major02.$minorC.$serviceC",
             "$major02.$minor02.$service02.$fix02", "$major02.$minor02.$service02.$fix02-$build", "$major02.$minor02");
 
     @Test
@@ -76,9 +76,9 @@ class ComponentVersionFormatMatcherTest {
     }
 
     @Test
-    void testCardsVersionFormatNotStrictMatch() {
-        assertTrue(matcher.matchesMajorVersionFormatNonStrict(CARDS_VERSION_FORMAT, "03.40.29"));
-        assertFalse(matcher.matchesMajorVersionFormatNonStrict(CARDS_VERSION_FORMAT, "03.02"));
+    void testVersionFormatNotStrictMatch() {
+        assertTrue(matcher.matchesMajorVersionFormatNonStrict(VERSION_FORMAT, "03.40.29"));
+        assertFalse(matcher.matchesMajorVersionFormatNonStrict(VERSION_FORMAT, "03.02"));
 
         assertFalse(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30.29"));
         assertTrue(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30.29-4"));
