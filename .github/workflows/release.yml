@@ -4,5 +4,5 @@ on: workflow_dispatch
 
 jobs:
   build:
-    uses: octopusden/octopus-base/.github/workflows/common-java-maven-release.yml@create-mvn-release-template
+    uses: octopusden/octopus-base/.github/workflows/common-java-maven-release.yml@main
     secrets: inherit
