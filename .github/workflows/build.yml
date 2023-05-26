@@ -10,4 +10,5 @@ jobs:
     uses: octopusden/octopus-base/.github/workflows/common-java-build.yml@common-java-build
     with:
       process_env: Prod
+      java_version: 8
     secrets: inherit
