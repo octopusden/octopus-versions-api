@@ -9,6 +9,5 @@ jobs:
   run-build-and-deploy:
     uses: octopusden/octopus-base/.github/workflows/common-java-build.yml@common-java-build
     with:
-      process_env: Prod
       java-version: "8"
     secrets: inherit
