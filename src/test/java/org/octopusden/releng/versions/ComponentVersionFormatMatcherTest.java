@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ComponentVersionFormatMatcherTest {
 
-    private static final ComponentVersionFormatMatcher matcher = new ComponentVersionFormatMatcher();
+    private static final ComponentVersionFormatMatcher matcher = new ComponentVersionFormatMatcher(new VersionNames("serviceCBranch", "serviceC", "minorC"));
     private ComponentVersionFormat MODEL_VERSION_FORMAT = ComponentVersionFormat.create("Model.$major.$minor.$service",
             "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major02.$minor02");
     private ComponentVersionFormat VERSION_FORMAT = ComponentVersionFormat.create("$major02.$minorC.$serviceC",

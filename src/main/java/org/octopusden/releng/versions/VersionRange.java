@@ -15,9 +15,9 @@ public final class VersionRange {
     private final String versionRange;
     private final List<VersionRestriction> versionRestrictions = new ArrayList<>();
 
-    private VersionRange(final String versionRange) {
+    private VersionRange(final String versionRange, VersionNames versionNames) {
         this.versionRange = versionRange;
-        Arrays.stream(versionRange.split("(?<=[])])\\s*,\\s*(?=[\\[(])")).map(VersionRestriction::parseInternal).forEach(versionRestrictions::add);
+        Arrays.stream(versionRange.split("(?<=[])])\\s*,\\s*(?=[\\[(])")).map( (range) -> VersionRestriction.parseInternal(range, versionNames)).forEach(versionRestrictions::add);
         for (int i = 0; i < versionRestrictions.size() - 1; i++) {
             if (versionRestrictions.get(i).right != null && versionRestrictions.get(i + 1).left != null &&
                     versionRestrictions.get(i).right.compareTo(versionRestrictions.get(i + 1).left) > 0) {
@@ -34,8 +34,8 @@ public final class VersionRange {
      * @param versionRange version range
      * @return Returns created version range instance
      */
-    public static VersionRange createFromVersionSpec(final String versionRange) {
-        return new VersionRange(versionRange);
+    public static VersionRange createFromVersionSpec(final String versionRange, VersionNames versionNames) {
+        return new VersionRange(versionRange, versionNames);
     }
 
     /**
@@ -146,7 +146,7 @@ public final class VersionRange {
             return true;
         }
 
-        private static VersionRestriction parseInternal(final String versionRange) {
+        private static VersionRestriction parseInternal(final String versionRange, VersionNames versionNames) {
             final String[] versionRangeParts = versionRange.trim().split("\\s*,\\s*");
             if (versionRangeParts[0].length() == 0) {
                 throw new IllegalArgumentException("Bad version range: there is no 'minimum' specification " + versionRange);
@@ -158,7 +158,7 @@ public final class VersionRange {
                 if (versionRangeParts[0].length() < MINIMUM_RANGE_LENGTH || versionRangeParts[0].charAt(versionRangeParts[0].length() - 1) != ']') {
                     throw new IllegalArgumentException("Bad version range: the ']' doesn't specify hard version: " + versionRange);
                 }
-                final IVersionInfo version = NumericVersion.parse(versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1));
+                final IVersionInfo version = NumericVersion.parse(versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1), versionNames);
                 return new VersionRestriction(versionRange, version, true, version, true);
             }
 
@@ -204,8 +204,8 @@ public final class VersionRange {
                 default:
                     throw new IllegalArgumentException("Bad version range: the 'soft' requirement isn't supported: " + versionRange);
             }
-            final IVersionInfo minimum = leftVersion != null ? NumericVersion.parse(leftVersion) : null;
-            final IVersionInfo maximum = rightVersion != null ? NumericVersion.parse(rightVersion) : null;
+            final IVersionInfo minimum = leftVersion != null ? NumericVersion.parse(leftVersion, versionNames) : null;
+            final IVersionInfo maximum = rightVersion != null ? NumericVersion.parse(rightVersion, versionNames) : null;
             if (minimum != null && maximum != null) {
                 if (minimum.compareTo(maximum) == 0) {
                     if (!includeLeft) {

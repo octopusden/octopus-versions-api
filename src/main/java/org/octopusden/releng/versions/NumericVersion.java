@@ -14,15 +14,22 @@ public final class NumericVersion implements IVersionInfo {
     private final String rawVersion;
     private final boolean snapshot;
     private final boolean rcVersion;
+    private final VersionNames versionNames;
 
-    private NumericVersion(List<Integer> items, String rawVersion, boolean snapshot, boolean rcVersion) {
+    private NumericVersion(List<Integer> items,
+                           String rawVersion,
+                           boolean snapshot,
+                           boolean rcVersion,
+                           VersionNames versionNames) {
         this.snapshot = snapshot;
         this.items = Collections.unmodifiableList(items);
         this.rawVersion = rawVersion;
         this.rcVersion = rcVersion;
+        this.versionNames = versionNames;
     }
 
-    public static IVersionInfo parse(String rawVersion) {
+    public static IVersionInfo parse(String rawVersion,
+                                     VersionNames versionNames) {
         Objects.requireNonNull(rawVersion, "version can't be null");
         final List<String> strings = new ArrayList<>();
         int l = 0;
@@ -47,10 +54,10 @@ public final class NumericVersion implements IVersionInfo {
             }
             items.add(item);
         }
-        return new NumericVersion(items, rawVersion, rawVersion.endsWith("-SNAPSHOT"), rawVersion.endsWith("_RC"));
+        return new NumericVersion(items, rawVersion, rawVersion.endsWith("-SNAPSHOT"), rawVersion.endsWith("_RC"), versionNames);
     }
 
-    public static IVersionInfo create(int... elements) {
+    public static IVersionInfo create(VersionNames versionNames, int... elements) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int element : elements) {
             if (stringBuilder.length() > 0) {
@@ -58,7 +65,7 @@ public final class NumericVersion implements IVersionInfo {
             }
             stringBuilder.append(element);
         }
-        return parse(stringBuilder.toString());
+        return parse(stringBuilder.toString(), versionNames);
     }
 
     @Override
@@ -122,7 +129,7 @@ public final class NumericVersion implements IVersionInfo {
 
     @Override
     public String formatVersion(String format) {
-        return new KotlinVersionFormatter().format(format, this);
+        return new KotlinVersionFormatter(versionNames).format(format, this);
     }
 
     public boolean isRcVersion() {

@@ -3,16 +3,17 @@ package org.octopusden.releng.versions
 import org.octopusden.utils.expandContext
 import org.octopusden.utils.offsetFormat
 
-class KotlinVersionFormatter : VersionFormatter {
+class KotlinVersionFormatter(
+    private val versionNames: VersionNames) : VersionFormatter {
 
     // TODO: make static
     val PREDEFINED_VARIABLES_LIST: List<Pair<String, (IVersionInfo) -> String>> = listOf(
-            "serviceCBranch" to { version: IVersionInfo -> calculateServiceCBranch(version).offsetFormat(2) },
-            "serviceC" to { version: IVersionInfo -> calculateServiceC(version).offsetFormat(2) },
+            versionNames.serviceBranch to { version: IVersionInfo -> calculateServiceCBranch(version).offsetFormat(2) },
+            versionNames.service to { version: IVersionInfo -> calculateServiceC(version).offsetFormat(2) },
             "service02" to { version: IVersionInfo -> version.service.offsetFormat(2) },
             "service" to { version: IVersionInfo -> version.service.toString() },
 
-            "minorC" to { version: IVersionInfo -> calculateMinorC(version).offsetFormat(2) },
+            versionNames.minor to { version: IVersionInfo -> calculateMinorC(version).offsetFormat(2) },
             "minor02" to { version: IVersionInfo -> version.minor.offsetFormat(2) },
             "minor" to { version: IVersionInfo -> version.minor.toString() },
 
@@ -59,20 +60,20 @@ class KotlinVersionFormatter : VersionFormatter {
                     .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix) }.toMap())
 
     override fun matchesFormat(format: String, version: String): Boolean {
-        val numericVersion = NumericVersion.parse(version)
+        val numericVersion = NumericVersion.parse(version, versionNames)
         val patchedFormat = getPatchedFormat(format)
         return version == format(patchedFormat, numericVersion)
     }
 
     override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
         val patchedFormat = getPatchedFormat(versionFormat)
-        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, NumericVersion.parse(version))
+        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, NumericVersion.parse(version, versionNames))
     }
 
     fun getPatchedFormat(format: String) = format
-            .replace("\$serviceCBranch", "\$service02")
-            .replace("\$serviceC", "\$service02")
-            .replace("\$minorC", "\$minor02")
+            .replace("\$${versionNames.serviceBranch}", "\$service02")
+            .replace("\$${versionNames.service}", "\$service02")
+            .replace("\$${versionNames.minor}", "\$minor02")
 
 
     override fun matchesNonStrictFormat(format: String, version: String): Boolean {
@@ -82,7 +83,7 @@ class KotlinVersionFormatter : VersionFormatter {
             tempFormat = tempFormat.replace(it.first, "")
             res
         }.size
-        return predefinedVariableCount <= NumericVersion.parse(version).itemsCount
+        return predefinedVariableCount <= NumericVersion.parse(version, versionNames).itemsCount
     }
 
 }

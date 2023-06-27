@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComponentVersionFormatterTest {
 
+    private static final VersionNames VERSION_NAMES = new VersionNames("service", "serviceC", "minor");
+
     private static
     final ComponentVersionFormat componentVersionFormat = ComponentVersionFormat.create("Model.$major.$minor.$service",
             "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major.$minor");
 
     private ComponentVersionFormatter componentVersionFormatter = new ComponentVersionFormatter();
-    private IVersionInfo version = NumericVersion.parse("1.2.3.4.5");
+    private IVersionInfo version = NumericVersion.parse("1.2.3.4.5", VERSION_NAMES);
 
 
     @Test

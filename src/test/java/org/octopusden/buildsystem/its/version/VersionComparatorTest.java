@@ -2,6 +2,7 @@ package org.octopusden.buildsystem.its.version;
 
 import org.octopusden.releng.versions.ReversedVersionComparator;
 import org.junit.jupiter.api.Test;
+import org.octopusden.releng.versions.VersionNames;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,15 +20,17 @@ class VersionComparatorTest {
     private static final String v7 = "1.3";
     private static final String v8 = "1.1";
 
+    private static final VersionNames VERSION_NAMES = new VersionNames("service", "serviceC", "minor");
+
     @Test
     void testReversedComparator() {
-        assertTrue(new ReversedVersionComparator().compare(v1, v2) > 0);
+        assertTrue(new ReversedVersionComparator(VERSION_NAMES).compare(v1, v2) > 0);
     }
 
     @Test
     void testCompare() {
         List<String> versions = Arrays.asList(v2, v4, v3, v1, v5, v6, v7, v8);
-        versions.sort(new ReversedVersionComparator());
+        versions.sort(new ReversedVersionComparator(VERSION_NAMES));
         assertEquals(v7, versions.get(0));
         assertEquals(v4, versions.get(1));
         assertEquals(v3, versions.get(2));
@@ -42,7 +45,7 @@ class VersionComparatorTest {
     @Test
     void testCompareDifferentFormats() {
         List<String> versions =Arrays.asList("Azericard.2", "2.0.143");
-        versions.sort(new ReversedVersionComparator());
+        versions.sort(new ReversedVersionComparator(VERSION_NAMES));
         assertEquals("2.0.143", versions.get(0));
         assertEquals("Azericard.2", versions.get(1));
     }
