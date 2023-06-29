@@ -23,66 +23,68 @@ import static org.junit.jupiter.api.Assertions.*;
 class VersionRangeTest {
 
     private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC");
+    private static final VersionRange.Builder VERSION_RANGE_BUILDER = new VersionRange.Builder(VERSION_NAMES);
+    private static final NumericVersion.Builder NUMERIC_VERSION_BUILDER = new NumericVersion.Builder(VERSION_NAMES);
 
     @Test
     void testHardEqual() {
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[0]").containsVersion(NumericVersion.parse(VERSION_NAMES, "0")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[1]").containsVersion(NumericVersion.parse(VERSION_NAMES, "1")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-999")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-998")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-1000")));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("[0]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("0").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("[1]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("1").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("[03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30-999").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("[03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30-998").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("[03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30-1000").build()));
     }
 
     @Test
     void testMultiplyRanges() {
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1001")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1000")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-269, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.1001").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.1000").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30-269, 03.49.30-999],(03.49.30-999,03.49.30-1000]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
     }
 
     @Test
     void testDifferentVersionFormats() {
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1000")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-269, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-268, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-269, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.1000").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("[03.49.30-269, 03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30-268, 03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30-269, 03.49.30-999]").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build()));
 
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-269")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-1000")));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30.999)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30-269").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30.999)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30-1000").build()));
     }
 
     @Test
     void test4DigitVersionRange() {
-        final IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "03.49.30.269");
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999]").containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30, 03.49.30.9999)").containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.261, 03.49.30.999)").containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00, 03.49.30.261]").containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00, 03.49.30.269)").containsVersion(version));
+        final IVersionInfo version = NUMERIC_VERSION_BUILDER.setRawVersion("03.49.30.269").build();
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30.999]").build().containsVersion(version));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(, 03.49.30.999)").build().containsVersion(version));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30, 03.49.30.9999)").build().containsVersion(version));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30.261, 03.49.30.999)").build().containsVersion(version));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30.00, 03.49.30.261]").build().containsVersion(version));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30.00, 03.49.30.269)").build().containsVersion(version));
 
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00-123, 03.49.30.270-0545)").containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.30.269")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.30.269-22")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.32.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.31")));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.32.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.33")));
-        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.268-0545)").containsVersion(version));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(03.49.30.00-123, 03.49.30.270-0545)").build().containsVersion(version));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.30.270-0545)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("3.49.30.269").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.30.270-0545)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("3.49.30.269-22").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.32.270-0545)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("3.49.31").build()));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.32.270-0545)").build().containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("3.49.33").build()));
+        assertTrue(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.30.270-0545)").build().containsVersion(version));
+        assertFalse(VERSION_RANGE_BUILDER.setVersionRange("(3.49.30.00-123, 3.49.30.268-0545)").build().containsVersion(version));
     }
 
     @Test
     void testVersionRange()  {
-        IVersionInfo version1 = NumericVersion.parse(VERSION_NAMES, "1.13.2-15");
-        IVersionInfo version2 = NumericVersion.parse(VERSION_NAMES, "1.12.2-15");
-        IVersionInfo version3 = NumericVersion.parse(VERSION_NAMES, "1.1");
-        IVersionInfo version4 = NumericVersion.parse(VERSION_NAMES, "1.10");
-        IVersionInfo version5 = NumericVersion.parse(VERSION_NAMES, "1.12.1-151");
-        IVersionInfo version6 = NumericVersion.parse(VERSION_NAMES, "2");
-        IVersionInfo version7 = NumericVersion.parse(VERSION_NAMES, "1");
+        IVersionInfo version1 = NUMERIC_VERSION_BUILDER.setRawVersion("1.13.2-15").build();
+        IVersionInfo version2 = NUMERIC_VERSION_BUILDER.setRawVersion("1.12.2-15").build();
+        IVersionInfo version3 = NUMERIC_VERSION_BUILDER.setRawVersion("1.1").build();
+        IVersionInfo version4 = NUMERIC_VERSION_BUILDER.setRawVersion("1.10").build();
+        IVersionInfo version5 = NUMERIC_VERSION_BUILDER.setRawVersion("1.12.1-151").build();
+        IVersionInfo version6 = NUMERIC_VERSION_BUILDER.setRawVersion("2").build();
+        IVersionInfo version7 = NUMERIC_VERSION_BUILDER.setRawVersion("1").build();
 
-        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "[1.12.1-150,)");
+        VersionRange versionRange = VERSION_RANGE_BUILDER.setVersionRange("[1.12.1-150,)").build();
 
         assertTrue(versionRange.containsVersion(version1));
         assertTrue(versionRange.containsVersion(version2));
@@ -97,18 +99,18 @@ class VersionRangeTest {
     void testCommonCase() {
         assertThat("(,3),(3,)", notContainAnyVersion("3"));
         assertThat("(,3),(3,)", containAllVersions("2", "4"));
-        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "[3.49.29.18, 4.0)");
-        IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "3.49.29.19.10");
+        VersionRange versionRange = VERSION_RANGE_BUILDER.setVersionRange("[3.49.29.18, 4.0)").build();
+        IVersionInfo version = NUMERIC_VERSION_BUILDER.setRawVersion("3.49.29.19.10").build();
         assertTrue(versionRange.containsVersion(version));
     }
 
     // RELENG-109
     @Test
     void testVersionWithZeroInTheMiddle() {
-        IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "10.0.8");
-        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "(10,)");
+        IVersionInfo version = NUMERIC_VERSION_BUILDER.setRawVersion("10.0.8").build();
+        VersionRange versionRange = VERSION_RANGE_BUILDER.setVersionRange("(10,)").build();
         assertTrue(versionRange.containsVersion(version));
-        assertFalse(versionRange.containsVersion(NumericVersion.parse(VERSION_NAMES, "10.0")));
+        assertFalse(versionRange.containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion("10.0").build()));
     }
 
     //Below tests are ported from maven source maven-artifact/src/test/java/org/apache/maven/artifact/versioning/VersionRangeTest.java
@@ -116,26 +118,26 @@ class VersionRangeTest {
     @ParameterizedTest
     @ValueSource(strings  = {"(1.0)", "[1.0)", "(1.0]", "(1.0,1.0]", "[1.0,1.0)", "(1.0,1.0)", "[1.1,1.0]", "[1.0,1.2),1.3"})
     void testInvalidRangeSpecification(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
+        assertThrows(IllegalArgumentException.class, ()-> VERSION_RANGE_BUILDER.setVersionRange(rangeSpecification));
     }
 
     @ParameterizedTest
     @ValueSource(strings  = {"[1.0,1.2),(1.1,1.3]", "[1.1,1.3),(1.0,1.2]"})
     void testInvalidRangeSpecificationDueToTheOverlap(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
+        assertThrows(IllegalArgumentException.class, ()-> VERSION_RANGE_BUILDER.setVersionRange(rangeSpecification));
     }
 
     @ParameterizedTest
     @ValueSource(strings  = {"(1.1,1.2],[1.0,1.1)", "(3, 4],[1, 3)"})
     void testInvalidRangeSpecificationDueToTheOrdering(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
+        assertThrows(IllegalArgumentException.class, ()-> VERSION_RANGE_BUILDER.setVersionRange(rangeSpecification));
     }
 
     @ParameterizedTest
     @MethodSource("positiveIntersectionData")
     void testPositiveIntersection(final String leftRange, final String rightRange) {
-        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, leftRange);
-        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rightRange);
+        final VersionRange leftVersionRange = VERSION_RANGE_BUILDER.setVersionRange(leftRange).build();
+        final VersionRange rightVersionRange = VERSION_RANGE_BUILDER.setVersionRange(rightRange).build();
         assertTrue(leftVersionRange.isIntersect(rightVersionRange));
         assertTrue(rightVersionRange.isIntersect(leftVersionRange));
     }
@@ -171,8 +173,8 @@ class VersionRangeTest {
     @ParameterizedTest
     @MethodSource("negativeIntersectionData")
     void testNegativeIntersection(final String leftRange, final String rightRange) {
-        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, leftRange);
-        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rightRange);
+        final VersionRange leftVersionRange = VERSION_RANGE_BUILDER.setVersionRange(leftRange).build();
+        final VersionRange rightVersionRange = VERSION_RANGE_BUILDER.setVersionRange(rightRange).build();
         assertFalse(leftVersionRange.isIntersect(rightVersionRange));
         assertFalse(rightVersionRange.isIntersect(leftVersionRange));
     }
@@ -229,11 +231,11 @@ class VersionRangeTest {
 
         @Override
         protected boolean matchesSafely(final String rangeSpecification) {
-            final VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification);
+            final VersionRange versionRange = VERSION_RANGE_BUILDER.setVersionRange(rangeSpecification).build();
             final Collection<String> containAnyCollection = new ArrayList<>();
             final Collection<String> notContainCollection = new ArrayList<>();
             for (final String version: versions) {
-                if (!versionRange.containsVersion(NumericVersion.parse(VERSION_NAMES, version))) {
+                if (!versionRange.containsVersion(NUMERIC_VERSION_BUILDER.setRawVersion(version).build())) {
                     notContainCollection.add(version);
                 } else {
                     containAnyCollection.add(version);

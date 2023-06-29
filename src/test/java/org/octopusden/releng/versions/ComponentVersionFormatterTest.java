@@ -12,8 +12,8 @@ class ComponentVersionFormatterTest {
     final ComponentVersionFormat componentVersionFormat = ComponentVersionFormat.create("Model.$major.$minor.$service",
             "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major.$minor");
 
-    private ComponentVersionFormatter componentVersionFormatter = new ComponentVersionFormatter();
-    private IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "1.2.3.4.5");
+    private final ComponentVersionFormatter componentVersionFormatter = new ComponentVersionFormatter();
+    private final IVersionInfo version = new NumericVersion.Builder(VERSION_NAMES).setRawVersion("1.2.3.4.5").build();
 
 
     @Test

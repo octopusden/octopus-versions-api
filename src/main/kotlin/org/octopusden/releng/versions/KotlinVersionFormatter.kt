@@ -6,6 +6,7 @@ import org.octopusden.utils.offsetFormat
 class KotlinVersionFormatter(
     private val versionNames: VersionNames) : VersionFormatter {
 
+    private val numericVersionBuilder: NumericVersion.Builder = NumericVersion.Builder(versionNames)
     // TODO: make static
     val PREDEFINED_VARIABLES_LIST: List<Pair<String, (IVersionInfo) -> String>> = listOf(
             versionNames.serviceBranch to { version: IVersionInfo -> calculateServiceCBranch(version).offsetFormat(2) },
@@ -60,14 +61,14 @@ class KotlinVersionFormatter(
                     .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix) }.toMap())
 
     override fun matchesFormat(format: String, version: String): Boolean {
-        val numericVersion = NumericVersion.parse(versionNames, version)
+        val numericVersion = numericVersionBuilder.setRawVersion(version).build()
         val patchedFormat = getPatchedFormat(format)
         return version == format(patchedFormat, numericVersion)
     }
 
     override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
         val patchedFormat = getPatchedFormat(versionFormat)
-        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, NumericVersion.parse(versionNames, version))
+        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, numericVersionBuilder.setRawVersion(version).build())
     }
 
     fun getPatchedFormat(format: String) = format
@@ -83,7 +84,7 @@ class KotlinVersionFormatter(
             tempFormat = tempFormat.replace(it.first, "")
             res
         }.size
-        return predefinedVariableCount <= NumericVersion.parse(versionNames, version).itemsCount
+        return predefinedVariableCount <= numericVersionBuilder.setRawVersion(version).build().itemsCount
     }
 
 }

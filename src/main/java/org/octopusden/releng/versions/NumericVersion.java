@@ -16,11 +16,11 @@ public final class NumericVersion implements IVersionInfo {
     private final boolean rcVersion;
     private final VersionNames versionNames;
 
-    private NumericVersion(List<Integer> items,
+    private NumericVersion(VersionNames versionNames,
+                           List<Integer> items,
                            String rawVersion,
                            boolean snapshot,
-                           boolean rcVersion,
-                           VersionNames versionNames) {
+                           boolean rcVersion) {
         this.snapshot = snapshot;
         this.items = Collections.unmodifiableList(items);
         this.rawVersion = rawVersion;
@@ -28,7 +28,25 @@ public final class NumericVersion implements IVersionInfo {
         this.versionNames = versionNames;
     }
 
-    public static IVersionInfo parse(VersionNames versionNames, String rawVersion) {
+    public static class Builder {
+        final VersionNames versionName;
+        String rawVersion;
+
+        public Builder(VersionNames versionName) {
+            this.versionName = versionName;
+        }
+
+        public Builder setRawVersion(String rawVersion) {
+            this.rawVersion = rawVersion;
+            return this;
+        }
+
+        public IVersionInfo build() {
+            return NumericVersion.parse(versionName, rawVersion);
+        }
+    }
+
+    private static IVersionInfo parse(VersionNames versionNames, String rawVersion) {
         Objects.requireNonNull(rawVersion, "version can't be null");
         final List<String> strings = new ArrayList<>();
         int l = 0;
@@ -53,7 +71,7 @@ public final class NumericVersion implements IVersionInfo {
             }
             items.add(item);
         }
-        return new NumericVersion(items, rawVersion, rawVersion.endsWith("-SNAPSHOT"), rawVersion.endsWith("_RC"), versionNames);
+        return new NumericVersion(versionNames, items, rawVersion, rawVersion.endsWith("-SNAPSHOT"), rawVersion.endsWith("_RC"));
     }
 
     public static IVersionInfo create(VersionNames versionNames, int... elements) {

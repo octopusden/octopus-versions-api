@@ -12,10 +12,12 @@ class NumericVersionTest {
     private static final IVersionInfo VERSION_1_2_3_4 = version(STR_V_1_2_3_4);
 
     private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC");
-    private static final IVersionInfo VERSION_1_2_3 = NumericVersion.parse(VERSION_NAMES, STR_V_1_2_3);
+
+    private static final NumericVersion.Builder BUILDER = new NumericVersion.Builder(VERSION_NAMES);
+    private static final IVersionInfo VERSION_1_2_3 = BUILDER.setRawVersion(STR_V_1_2_3).build();
 
     private static IVersionInfo version(String version) {
-        return NumericVersion.parse(VERSION_NAMES, version);
+        return BUILDER.setRawVersion(version).build();
     }
 
     @Test
@@ -94,7 +96,7 @@ class NumericVersionTest {
     }
 
     private void assertMinorVersionCalculation(String minorVersion, String releaseVersion) {
-        String actual = NumericVersion.parse(VERSION_NAMES, releaseVersion).formatVersion("$major02.$minorC.$serviceC");
+        String actual = BUILDER.setRawVersion(releaseVersion).build().formatVersion("$major02.$minorC.$serviceC");
         assertEquals(minorVersion, actual, String.format("|%s|%s|%s|", releaseVersion, minorVersion.substring(0, 7), minorVersion));
     }
 
@@ -120,12 +122,12 @@ class NumericVersionTest {
     void testFormatVersion() {
         assertThat(VERSION_1_2_3.formatVersion("$major.$minor.$service"), equalTo(STR_V_1_2_3));
         assertThat(VERSION_1_2_3.formatVersion("MyComponent.$major.$minor.$service"), equalTo("MyComponent.1.2.3"));
-        assertEquals("Mojo.1_2_3", NumericVersion.parse(VERSION_NAMES, "Mojo.$STR_V_1_2_3").formatVersion("Mojo.$major_$minor_$service"));
+        assertEquals("Mojo.1_2_3", BUILDER.setRawVersion("Mojo.$STR_V_1_2_3").build().formatVersion("Mojo.$major_$minor_$service"));
     }
 
     @Test
     void testSameVersionFormat() {
         assertEquals(STR_V_1_2_3, VERSION_1_2_3.formatVersion("$major.$minor.$service"));
-        assertEquals("Mojo.1_2_3", NumericVersion.parse(VERSION_NAMES, STR_V_1_2_3).formatVersion("Mojo.$major_$minor_$service"));
+        assertEquals("Mojo.1_2_3", BUILDER.setRawVersion(STR_V_1_2_3).build().formatVersion("Mojo.$major_$minor_$service"));
     }
 }

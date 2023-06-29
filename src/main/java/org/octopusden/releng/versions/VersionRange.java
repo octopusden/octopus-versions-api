@@ -27,15 +27,22 @@ public final class VersionRange {
         }
     }
 
-    /**
-     * Create version range from maven based {@link String} representation.
-     * @see <a href="https://cwiki.apache.org/confluence/x/e4OV">Dependency Version Ranges</a>
-     * It is used maven
-     * @param versionRange version range
-     * @return Returns created version range instance
-     */
-    public static VersionRange createFromVersionSpec(VersionNames versionNames, final String versionRange) {
-        return new VersionRange(versionRange, versionNames);
+    public static class Builder {
+        String versionRange;
+        final VersionNames versionNames;
+
+        public Builder(VersionNames versionNames) {
+            this.versionNames = versionNames;
+        }
+
+        public Builder setVersionRange(String versionRange) {
+            this.versionRange = versionRange;
+            return this;
+        }
+
+        public VersionRange build() {
+            return new VersionRange(versionRange, versionNames);
+        }
     }
 
     /**
@@ -158,7 +165,7 @@ public final class VersionRange {
                 if (versionRangeParts[0].length() < MINIMUM_RANGE_LENGTH || versionRangeParts[0].charAt(versionRangeParts[0].length() - 1) != ']') {
                     throw new IllegalArgumentException("Bad version range: the ']' doesn't specify hard version: " + versionRange);
                 }
-                final IVersionInfo version = NumericVersion.parse(versionNames, versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1));
+                final IVersionInfo version = new NumericVersion.Builder(versionNames).setRawVersion(versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1)).build();
                 return new VersionRestriction(versionRange, version, true, version, true);
             }
 
@@ -204,8 +211,9 @@ public final class VersionRange {
                 default:
                     throw new IllegalArgumentException("Bad version range: the 'soft' requirement isn't supported: " + versionRange);
             }
-            final IVersionInfo minimum = leftVersion != null ? NumericVersion.parse(versionNames, leftVersion) : null;
-            final IVersionInfo maximum = rightVersion != null ? NumericVersion.parse(versionNames, rightVersion) : null;
+            final NumericVersion.Builder builder = new NumericVersion.Builder(versionNames);
+            final IVersionInfo minimum = leftVersion != null ? builder.setRawVersion(leftVersion).build() : null;
+            final IVersionInfo maximum = rightVersion != null ? builder.setRawVersion(rightVersion).build() : null;
             if (minimum != null && maximum != null) {
                 if (minimum.compareTo(maximum) == 0) {
                     if (!includeLeft) {
