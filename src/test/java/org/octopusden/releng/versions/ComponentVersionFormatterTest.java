@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComponentVersionFormatterTest {
 
-    private static final VersionNames VERSION_NAMES = new VersionNames("service", "serviceC", "minor");
+    private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC")
 
     private static
     final ComponentVersionFormat componentVersionFormat = ComponentVersionFormat.create("Model.$major.$minor.$service",
