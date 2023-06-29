@@ -34,7 +34,7 @@ public final class VersionRange {
      * @param versionRange version range
      * @return Returns created version range instance
      */
-    public static VersionRange createFromVersionSpec(final String versionRange, VersionNames versionNames) {
+    public static VersionRange createFromVersionSpec(VersionNames versionNames, final String versionRange) {
         return new VersionRange(versionRange, versionNames);
     }
 
@@ -158,7 +158,7 @@ public final class VersionRange {
                 if (versionRangeParts[0].length() < MINIMUM_RANGE_LENGTH || versionRangeParts[0].charAt(versionRangeParts[0].length() - 1) != ']') {
                     throw new IllegalArgumentException("Bad version range: the ']' doesn't specify hard version: " + versionRange);
                 }
-                final IVersionInfo version = NumericVersion.parse(versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1), versionNames);
+                final IVersionInfo version = NumericVersion.parse(versionNames, versionRangeParts[0].substring(1, versionRangeParts[0].length() - 1));
                 return new VersionRestriction(versionRange, version, true, version, true);
             }
 
@@ -204,8 +204,8 @@ public final class VersionRange {
                 default:
                     throw new IllegalArgumentException("Bad version range: the 'soft' requirement isn't supported: " + versionRange);
             }
-            final IVersionInfo minimum = leftVersion != null ? NumericVersion.parse(leftVersion, versionNames) : null;
-            final IVersionInfo maximum = rightVersion != null ? NumericVersion.parse(rightVersion, versionNames) : null;
+            final IVersionInfo minimum = leftVersion != null ? NumericVersion.parse(versionNames, leftVersion) : null;
+            final IVersionInfo maximum = rightVersion != null ? NumericVersion.parse(versionNames, rightVersion) : null;
             if (minimum != null && maximum != null) {
                 if (minimum.compareTo(maximum) == 0) {
                     if (!includeLeft) {

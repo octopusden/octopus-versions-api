@@ -24,9 +24,9 @@ class KotlinVersionFormatterTest {
 
     @Test
     void testSimpleFormat() {
-        assertEquals("1.2.3", formatter.format(SIMPLE_FORMAT, NumericVersion.parse("1.2.3", VERSION_NAMES)));
-        assertEquals("MyComponent.1.2.3", formatter.format(COMPONENT_FORMAT, NumericVersion.parse("1.2.3", VERSION_NAMES)));
-        assertEquals("01.4000.00.444", formatter.format("$major02.${minor02}.$service02.$fix02", NumericVersion.parse("1.4000.0.444", VERSION_NAMES)));
+        assertEquals("1.2.3", formatter.format(SIMPLE_FORMAT, NumericVersion.parse(VERSION_NAMES, "1.2.3")));
+        assertEquals("MyComponent.1.2.3", formatter.format(COMPONENT_FORMAT, NumericVersion.parse(VERSION_NAMES, "1.2.3")));
+        assertEquals("01.4000.00.444", formatter.format("$major02.${minor02}.$service02.$fix02", NumericVersion.parse(VERSION_NAMES, "1.4000.0.444")));
 
         assert formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3");
         assert !formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3-4");
@@ -49,24 +49,24 @@ class KotlinVersionFormatterTest {
 
     @Test
     void testBuildFormat() {
-        assertEquals("1.2.3.4-5", formatter.format(BUILD_VERSION_FORMAT, NumericVersion.parse("1.2.3.4.5", VERSION_NAMES)));
+        assertEquals("1.2.3.4-5", formatter.format(BUILD_VERSION_FORMAT, NumericVersion.parse(VERSION_NAMES, "1.2.3.4.5")));
     }
 
     @Test
     void testBranchFormat() {
-        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("3.44.29.2-2", VERSION_NAMES)));
-        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT_WITH_BRACES, NumericVersion.parse("3.44.29.2-2", VERSION_NAMES)));
-        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("3.44.30.2-2", VERSION_NAMES)));
-        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse("03.44.31.15-35", VERSION_NAMES))); //-> major
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse(VERSION_NAMES, "3.44.29.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT_WITH_BRACES, NumericVersion.parse(VERSION_NAMES, "3.44.29.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse(VERSION_NAMES, "3.44.30.2-2")));
+        assertEquals("C_03_44_30", formatter.format(BRANCH_FORMAT, NumericVersion.parse(VERSION_NAMES, "03.44.31.15-35"))); //-> major
     }
 
     @Test
     void testSimpleCustomerFormat() {
         String customerVersion = formatter.formatToCustomerVersion("$versionPrefix-$baseVersionFormat", SIMPLE_FORMAT,
-                "halyk", NumericVersion.parse("1.2.3", VERSION_NAMES));
+                "halyk", NumericVersion.parse(VERSION_NAMES, "1.2.3"));
         assertEquals("halyk-1.2.3", customerVersion);
 
-        customerVersion = formatter.formatToCustomerVersion("$versionPrefix.$baseVersionFormat", SIMPLE_FORMAT2, "akBARS", NumericVersion.parse("1.2.3.4", VERSION_NAMES));
+        customerVersion = formatter.formatToCustomerVersion("$versionPrefix.$baseVersionFormat", SIMPLE_FORMAT2, "akBARS", NumericVersion.parse(VERSION_NAMES, "1.2.3.4"));
         assertEquals("akBARS.1.2.3-4", customerVersion);
     }
 

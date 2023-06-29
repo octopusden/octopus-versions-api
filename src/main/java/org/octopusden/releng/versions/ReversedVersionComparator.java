@@ -21,8 +21,8 @@ public class ReversedVersionComparator implements Comparator<String>, Serializab
      */
     @Override
     public int compare(String version1, String version2) {
-        IVersionInfo numericVersion1 = NumericVersion.parse(version1, versionNames);
-        IVersionInfo numericVersion2 = NumericVersion.parse(version2, versionNames);
+        IVersionInfo numericVersion1 = NumericVersion.parse(versionNames, version1);
+        IVersionInfo numericVersion2 = NumericVersion.parse(versionNames, version2);
         return numericVersion2.compareTo(numericVersion1);
     }
 }

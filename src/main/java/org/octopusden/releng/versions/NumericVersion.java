@@ -28,8 +28,7 @@ public final class NumericVersion implements IVersionInfo {
         this.versionNames = versionNames;
     }
 
-    public static IVersionInfo parse(String rawVersion,
-                                     VersionNames versionNames) {
+    public static IVersionInfo parse(VersionNames versionNames, String rawVersion) {
         Objects.requireNonNull(rawVersion, "version can't be null");
         final List<String> strings = new ArrayList<>();
         int l = 0;
@@ -65,7 +64,7 @@ public final class NumericVersion implements IVersionInfo {
             }
             stringBuilder.append(element);
         }
-        return parse(stringBuilder.toString(), versionNames);
+        return parse(versionNames, stringBuilder.toString());
     }
 
     @Override

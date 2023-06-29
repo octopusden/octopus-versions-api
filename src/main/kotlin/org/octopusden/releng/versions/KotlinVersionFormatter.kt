@@ -60,14 +60,14 @@ class KotlinVersionFormatter(
                     .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix) }.toMap())
 
     override fun matchesFormat(format: String, version: String): Boolean {
-        val numericVersion = NumericVersion.parse(version, versionNames)
+        val numericVersion = NumericVersion.parse(versionNames, version)
         val patchedFormat = getPatchedFormat(format)
         return version == format(patchedFormat, numericVersion)
     }
 
     override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
         val patchedFormat = getPatchedFormat(versionFormat)
-        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, NumericVersion.parse(version, versionNames))
+        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, NumericVersion.parse(versionNames, version))
     }
 
     fun getPatchedFormat(format: String) = format
@@ -83,7 +83,7 @@ class KotlinVersionFormatter(
             tempFormat = tempFormat.replace(it.first, "")
             res
         }.size
-        return predefinedVariableCount <= NumericVersion.parse(version, versionNames).itemsCount
+        return predefinedVariableCount <= NumericVersion.parse(versionNames, version).itemsCount
     }
 
 }

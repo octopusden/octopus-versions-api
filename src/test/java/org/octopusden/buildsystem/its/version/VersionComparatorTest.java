@@ -20,7 +20,7 @@ class VersionComparatorTest {
     private static final String v7 = "1.3";
     private static final String v8 = "1.1";
 
-    private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC")
+    private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC");
 
     @Test
     void testReversedComparator() {

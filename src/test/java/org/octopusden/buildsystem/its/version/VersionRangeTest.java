@@ -26,63 +26,63 @@ class VersionRangeTest {
 
     @Test
     void testHardEqual() {
-        assertTrue(VersionRange.createFromVersionSpec("[0]", VERSION_NAMES).containsVersion(NumericVersion.parse("0", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("[1]", VERSION_NAMES).containsVersion(NumericVersion.parse("1", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("[03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30-999", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("[03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30-998", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("[03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30-1000", VERSION_NAMES)));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[0]").containsVersion(NumericVersion.parse(VERSION_NAMES, "0")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[1]").containsVersion(NumericVersion.parse(VERSION_NAMES, "1")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-999")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-998")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-1000")));
     }
 
     @Test
     void testMultiplyRanges() {
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.1001", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30-999],(03.49.30-999,03.49.30-1000]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.1000", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(03.49.30-269, 03.49.30-999],(03.49.30-999,03.49.30-1000]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1001")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1000")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-269, 03.49.30-999],(03.49.30-999,03.49.30-1000]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
     }
 
     @Test
     void testDifferentVersionFormats() {
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(, 03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.1000", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("[03.49.30-269, 03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("(03.49.30-268, 03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(03.49.30-269, 03.49.30-999]", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30.269", VERSION_NAMES)));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.1000")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "[03.49.30-269, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-268, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30-269, 03.49.30-999]").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30.269")));
 
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30.999)", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30-269", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(, 03.49.30.999)", VERSION_NAMES).containsVersion(NumericVersion.parse("03.49.30-1000", VERSION_NAMES)));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-269")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(NumericVersion.parse(VERSION_NAMES, "03.49.30-1000")));
     }
 
     @Test
     void test4DigitVersionRange() {
-        final IVersionInfo version = NumericVersion.parse("03.49.30.269", VERSION_NAMES);
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30.999]", VERSION_NAMES).containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec("(, 03.49.30.999)", VERSION_NAMES).containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec("(03.49.30, 03.49.30.9999)", VERSION_NAMES).containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec("(03.49.30.261, 03.49.30.999)", VERSION_NAMES).containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec("(03.49.30.00, 03.49.30.261]", VERSION_NAMES).containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec("(03.49.30.00, 03.49.30.269)", VERSION_NAMES).containsVersion(version));
+        final IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "03.49.30.269");
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999]").containsVersion(version));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(, 03.49.30.999)").containsVersion(version));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30, 03.49.30.9999)").containsVersion(version));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.261, 03.49.30.999)").containsVersion(version));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00, 03.49.30.261]").containsVersion(version));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00, 03.49.30.269)").containsVersion(version));
 
-        assertTrue(VersionRange.createFromVersionSpec("(03.49.30.00-123, 03.49.30.270-0545)", VERSION_NAMES).containsVersion(version));
-        assertTrue(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.30.270-0545)", VERSION_NAMES).containsVersion(NumericVersion.parse("3.49.30.269", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.30.270-0545)", VERSION_NAMES).containsVersion(NumericVersion.parse("3.49.30.269-22", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.32.270-0545)", VERSION_NAMES).containsVersion(NumericVersion.parse("3.49.31", VERSION_NAMES)));
-        assertFalse(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.32.270-0545)", VERSION_NAMES).containsVersion(NumericVersion.parse("3.49.33", VERSION_NAMES)));
-        assertTrue(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.30.270-0545)", VERSION_NAMES).containsVersion(version));
-        assertFalse(VersionRange.createFromVersionSpec("(3.49.30.00-123, 3.49.30.268-0545)", VERSION_NAMES).containsVersion(version));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(03.49.30.00-123, 03.49.30.270-0545)").containsVersion(version));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.30.269")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.30.269-22")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.32.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.31")));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.32.270-0545)").containsVersion(NumericVersion.parse(VERSION_NAMES, "3.49.33")));
+        assertTrue(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.270-0545)").containsVersion(version));
+        assertFalse(VersionRange.createFromVersionSpec(VERSION_NAMES, "(3.49.30.00-123, 3.49.30.268-0545)").containsVersion(version));
     }
 
     @Test
     void testVersionRange()  {
-        IVersionInfo version1 = NumericVersion.parse("1.13.2-15", VERSION_NAMES);
-        IVersionInfo version2 = NumericVersion.parse("1.12.2-15", VERSION_NAMES);
-        IVersionInfo version3 = NumericVersion.parse("1.1", VERSION_NAMES);
-        IVersionInfo version4 = NumericVersion.parse("1.10", VERSION_NAMES);
-        IVersionInfo version5 = NumericVersion.parse("1.12.1-151", VERSION_NAMES);
-        IVersionInfo version6 = NumericVersion.parse("2", VERSION_NAMES);
-        IVersionInfo version7 = NumericVersion.parse("1", VERSION_NAMES);
+        IVersionInfo version1 = NumericVersion.parse(VERSION_NAMES, "1.13.2-15");
+        IVersionInfo version2 = NumericVersion.parse(VERSION_NAMES, "1.12.2-15");
+        IVersionInfo version3 = NumericVersion.parse(VERSION_NAMES, "1.1");
+        IVersionInfo version4 = NumericVersion.parse(VERSION_NAMES, "1.10");
+        IVersionInfo version5 = NumericVersion.parse(VERSION_NAMES, "1.12.1-151");
+        IVersionInfo version6 = NumericVersion.parse(VERSION_NAMES, "2");
+        IVersionInfo version7 = NumericVersion.parse(VERSION_NAMES, "1");
 
-        VersionRange versionRange = VersionRange.createFromVersionSpec("[1.12.1-150,)", VERSION_NAMES);
+        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "[1.12.1-150,)");
 
         assertTrue(versionRange.containsVersion(version1));
         assertTrue(versionRange.containsVersion(version2));
@@ -97,18 +97,18 @@ class VersionRangeTest {
     void testCommonCase() {
         assertThat("(,3),(3,)", notContainAnyVersion("3"));
         assertThat("(,3),(3,)", containAllVersions("2", "4"));
-        VersionRange versionRange = VersionRange.createFromVersionSpec("[3.49.29.18, 4.0)", VERSION_NAMES);
-        IVersionInfo version = NumericVersion.parse("3.49.29.19.10", VERSION_NAMES);
+        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "[3.49.29.18, 4.0)");
+        IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "3.49.29.19.10");
         assertTrue(versionRange.containsVersion(version));
     }
 
     // RELENG-109
     @Test
     void testVersionWithZeroInTheMiddle() {
-        IVersionInfo version = NumericVersion.parse("10.0.8", VERSION_NAMES);
-        VersionRange versionRange = VersionRange.createFromVersionSpec("(10,)", VERSION_NAMES);
+        IVersionInfo version = NumericVersion.parse(VERSION_NAMES, "10.0.8");
+        VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, "(10,)");
         assertTrue(versionRange.containsVersion(version));
-        assertFalse(versionRange.containsVersion(NumericVersion.parse("10.0", VERSION_NAMES)));
+        assertFalse(versionRange.containsVersion(NumericVersion.parse(VERSION_NAMES, "10.0")));
     }
 
     //Below tests are ported from maven source maven-artifact/src/test/java/org/apache/maven/artifact/versioning/VersionRangeTest.java
@@ -116,26 +116,26 @@ class VersionRangeTest {
     @ParameterizedTest
     @ValueSource(strings  = {"(1.0)", "[1.0)", "(1.0]", "(1.0,1.0]", "[1.0,1.0)", "(1.0,1.0)", "[1.1,1.0]", "[1.0,1.2),1.3"})
     void testInvalidRangeSpecification(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(rangeSpecification, VERSION_NAMES));
+        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
     }
 
     @ParameterizedTest
     @ValueSource(strings  = {"[1.0,1.2),(1.1,1.3]", "[1.1,1.3),(1.0,1.2]"})
     void testInvalidRangeSpecificationDueToTheOverlap(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(rangeSpecification, VERSION_NAMES));
+        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
     }
 
     @ParameterizedTest
     @ValueSource(strings  = {"(1.1,1.2],[1.0,1.1)", "(3, 4],[1, 3)"})
     void testInvalidRangeSpecificationDueToTheOrdering(final String rangeSpecification) {
-        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(rangeSpecification, VERSION_NAMES));
+        assertThrows(IllegalArgumentException.class, ()-> VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification));
     }
 
     @ParameterizedTest
     @MethodSource("positiveIntersectionData")
     void testPositiveIntersection(final String leftRange, final String rightRange) {
-        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(leftRange, VERSION_NAMES);
-        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(rightRange, VERSION_NAMES);
+        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, leftRange);
+        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rightRange);
         assertTrue(leftVersionRange.isIntersect(rightVersionRange));
         assertTrue(rightVersionRange.isIntersect(leftVersionRange));
     }
@@ -171,8 +171,8 @@ class VersionRangeTest {
     @ParameterizedTest
     @MethodSource("negativeIntersectionData")
     void testNegativeIntersection(final String leftRange, final String rightRange) {
-        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(leftRange, VERSION_NAMES);
-        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(rightRange, VERSION_NAMES);
+        final VersionRange leftVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, leftRange);
+        final VersionRange rightVersionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rightRange);
         assertFalse(leftVersionRange.isIntersect(rightVersionRange));
         assertFalse(rightVersionRange.isIntersect(leftVersionRange));
     }
@@ -229,11 +229,11 @@ class VersionRangeTest {
 
         @Override
         protected boolean matchesSafely(final String rangeSpecification) {
-            final VersionRange versionRange = VersionRange.createFromVersionSpec(rangeSpecification, VERSION_NAMES);
+            final VersionRange versionRange = VersionRange.createFromVersionSpec(VERSION_NAMES, rangeSpecification);
             final Collection<String> containAnyCollection = new ArrayList<>();
             final Collection<String> notContainCollection = new ArrayList<>();
             for (final String version: versions) {
-                if (!versionRange.containsVersion(NumericVersion.parse(version, VERSION_NAMES))) {
+                if (!versionRange.containsVersion(NumericVersion.parse(VERSION_NAMES, version))) {
                     notContainCollection.add(version);
                 } else {
                     containAnyCollection.add(version);
