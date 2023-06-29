@@ -11,7 +11,7 @@ class NumericVersionTest {
     private static final String STR_V_1_2_3 = "1.2.3";
     private static final IVersionInfo VERSION_1_2_3_4 = version(STR_V_1_2_3_4);
 
-    private static final VersionNames VERSION_NAMES = new VersionNames("service", "serviceC", "minor");
+    private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC")
     private static final IVersionInfo VERSION_1_2_3 = NumericVersion.parse(STR_V_1_2_3, VERSION_NAMES);
 
     private static IVersionInfo version(String version) {
