@@ -2,13 +2,10 @@ package org.octopusden.releng.versions;
 
 public final class ComponentVersionFormatMatcher {
 
-    private final VersionNames versionNames;
-
     private final KotlinVersionFormatter formatter;
 
 
     public ComponentVersionFormatMatcher(VersionNames versionNames) {
-        this.versionNames = versionNames;
         formatter = new KotlinVersionFormatter(versionNames);
     }
 

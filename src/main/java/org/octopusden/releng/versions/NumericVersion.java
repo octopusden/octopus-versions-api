@@ -16,7 +16,7 @@ public final class NumericVersion implements IVersionInfo {
     private final boolean rcVersion;
     private final VersionNames versionNames;
 
-    private NumericVersion(VersionNames versionNames,
+    NumericVersion(VersionNames versionNames,
                            List<Integer> items,
                            String rawVersion,
                            boolean snapshot,
@@ -26,63 +26,6 @@ public final class NumericVersion implements IVersionInfo {
         this.rawVersion = rawVersion;
         this.rcVersion = rcVersion;
         this.versionNames = versionNames;
-    }
-
-    public static class Builder {
-        final VersionNames versionName;
-        String rawVersion;
-
-        public Builder(VersionNames versionName) {
-            this.versionName = versionName;
-        }
-
-        public Builder setRawVersion(String rawVersion) {
-            this.rawVersion = rawVersion;
-            return this;
-        }
-
-        public IVersionInfo build() {
-            return NumericVersion.parse(versionName, rawVersion);
-        }
-    }
-
-    private static IVersionInfo parse(VersionNames versionNames, String rawVersion) {
-        Objects.requireNonNull(rawVersion, "version can't be null");
-        final List<String> strings = new ArrayList<>();
-        int l = 0;
-        int r;
-        for (r = 0; r < rawVersion.length(); r++) {
-            char c = rawVersion.charAt(r);
-            if (c == '_' || c == '.' || c == '-') {
-                strings.add(rawVersion.substring(l, r));
-                l = r + 1;
-            }
-        }
-        strings.add(rawVersion.substring(l, r));
-
-        ArrayList<Integer> items = new ArrayList<>();
-        for (String stringItem : strings) {
-            int item;
-            try {
-                item = Integer.parseInt(stringItem);
-            } catch (NumberFormatException e) {
-                continue;
-//                item = 0;
-            }
-            items.add(item);
-        }
-        return new NumericVersion(versionNames, items, rawVersion, rawVersion.endsWith("-SNAPSHOT"), rawVersion.endsWith("_RC"));
-    }
-
-    public static IVersionInfo create(VersionNames versionNames, int... elements) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int element : elements) {
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(".");
-            }
-            stringBuilder.append(element);
-        }
-        return parse(versionNames, stringBuilder.toString());
     }
 
     @Override
