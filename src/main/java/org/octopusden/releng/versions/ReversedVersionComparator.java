@@ -6,6 +6,12 @@ import java.util.Comparator;
 
 public class ReversedVersionComparator implements Comparator<String>, Serializable {
 
+    private final VersionNames versionNames;
+
+    public ReversedVersionComparator(VersionNames versionNames) {
+        this.versionNames = versionNames;
+    }
+
     /**
      * Compares its two version as NumericVersiob for order
      *
@@ -15,8 +21,9 @@ public class ReversedVersionComparator implements Comparator<String>, Serializab
      */
     @Override
     public int compare(String version1, String version2) {
-        IVersionInfo numericVersion1 = NumericVersion.parse(version1);
-        IVersionInfo numericVersion2 = NumericVersion.parse(version2);
+        NumericVersionFactory factory = new NumericVersionFactory(versionNames);
+        IVersionInfo numericVersion1 = factory.create(version1);
+        IVersionInfo numericVersion2 = factory.create(version2);
         return numericVersion2.compareTo(numericVersion1);
     }
 }
