@@ -4,7 +4,8 @@ import org.octopusden.utils.expandContext
 import org.octopusden.utils.offsetFormat
 
 class KotlinVersionFormatter(
-    private val versionNames: VersionNames) : VersionFormatter {
+    private val versionNames: VersionNames
+) : VersionFormatter {
 
     private val numericVersionFactory: NumericVersionFactory = NumericVersionFactory(versionNames)
     // TODO: make static
@@ -31,8 +32,9 @@ class KotlinVersionFormatter(
     )
 
     val PREDEFINED_COMPONENT_VARIABLES_LIST = listOf(
-            "versionPrefix" to { version: String, versionPrefix: String -> versionPrefix },
-            "baseVersionFormat" to { version: String, versionPrefix: String -> version }
+        "hotfixSuffix" to { _: String, _: String, hotfixSuffix: String -> hotfixSuffix },
+        "versionPrefix" to { version: String, versionPrefix: String, _: String -> versionPrefix },
+        "baseVersionFormat" to { version: String, _: String, _: String -> version }
     )
 
     val PREDEFINED_POSTPROCESSOR_LIST = listOf(
@@ -56,9 +58,31 @@ class KotlinVersionFormatter(
     override fun format(format: String, version: IVersionInfo): String =
             format.expandContext(PREDEFINED_VARIABLES_LIST.map { (key, value) -> key to value(version) }.toMap())
 
-    override fun formatToCustomerVersion(customerFormat: String, versionFormat: String, versionPrefix: String, version: IVersionInfo): String? =
-            customerFormat.expandContext(PREDEFINED_COMPONENT_VARIABLES_LIST
-                    .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix) }.toMap())
+    override fun formatToCustomerVersion(
+        customerFormat: String,
+        versionFormat: String,
+        versionPrefix: String,
+        version: IVersionInfo
+    ): String? =
+        customerFormat.expandContext(
+            PREDEFINED_COMPONENT_VARIABLES_LIST
+                .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix, "") }.toMap()
+        )
+
+    override fun formatToCustomerVersion(
+        customerFormat: String,
+        versionFormat: String,
+        versionPrefix: String,
+        hotfixSuffix: String?,
+        versionInfo: IVersionInfo
+    ): String? {
+        val formattedHotfixSuffix = if (hotfixSuffix != null) { format(hotfixSuffix, versionInfo) } else { "" }
+        return customerFormat.expandContext(
+            PREDEFINED_COMPONENT_VARIABLES_LIST
+                .map { (key, value) -> key to value(format(versionFormat, versionInfo), versionPrefix, formattedHotfixSuffix) }
+                .toMap()
+        )
+    }
 
     override fun matchesFormat(format: String, version: String): Boolean {
         val numericVersion = numericVersionFactory.create(version)

@@ -63,12 +63,24 @@ class KotlinVersionFormatterTest {
 
     @Test
     void testSimpleCustomerFormat() {
-        String customerVersion = formatter.formatToCustomerVersion("$versionPrefix-$baseVersionFormat", SIMPLE_FORMAT,
+        String customerVersion = formatter.formatToCustomerVersion("$versionPrefix-$baseVersionFormat",
+                SIMPLE_FORMAT,
                 "halyk", NUMERIC_VERSION_FACTORY.create("1.2.3"));
         assertEquals("halyk-1.2.3", customerVersion);
 
         customerVersion = formatter.formatToCustomerVersion("$versionPrefix.$baseVersionFormat", SIMPLE_FORMAT2, "akBARS", NUMERIC_VERSION_FACTORY.create("1.2.3.4"));
         assertEquals("akBARS.1.2.3-4", customerVersion);
+    }
+
+    @Test
+    void testHotfixCustomerFormat() {
+        String customerVersion = formatter.formatToCustomerVersion(
+                "$versionPrefix-$baseVersionFormat-$hotfixSuffix",
+                "$major.$minor.$service",
+                "halyk",
+                "HOTFIX$build",
+                    NUMERIC_VERSION_FACTORY.create("1.2.3.4-5"));
+        assertEquals("halyk-1.2.3-HOTFIX5", customerVersion);
     }
 
     @Test
