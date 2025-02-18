@@ -90,9 +90,13 @@ class KotlinVersionFormatter(
         return version == format(patchedFormat, numericVersion)
     }
 
-    override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
+    override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, hotfixSuffix: String?, version: String): Boolean {
         val patchedFormat = getPatchedFormat(versionFormat)
-        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, numericVersionFactory.create(version))
+        return version == formatToCustomerVersion(customerFormat, patchedFormat, versionPrefix, hotfixSuffix, numericVersionFactory.create(version))
+    }
+
+    override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
+        return matchesFormat(customerFormat, versionFormat, versionPrefix, null, version)
     }
 
     fun getPatchedFormat(format: String) = format

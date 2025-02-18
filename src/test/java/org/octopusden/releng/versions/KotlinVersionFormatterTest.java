@@ -2,7 +2,9 @@ package org.octopusden.releng.versions;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KotlinVersionFormatterTest {
 
@@ -97,6 +99,11 @@ class KotlinVersionFormatterTest {
 
     @Test
     void testMatchesCustomerFormat() {
+        assertTrue(formatter.matchesFormat("$versionPrefix-$baseVersionFormat-$hotfixSuffix", SIMPLE_FORMAT, "halyk", "hf", "halyk-1.2.3-hf"),
+                "Hotfix version must match format with hotfix suffix");
+        assertFalse(formatter.matchesFormat("$versionPrefix-$baseVersionFormat-$hotfixSuffix", SIMPLE_FORMAT, "halyk", "hf$fix", "halyk-1.2.3-hf"),
+                "Hotfix version not matches format with incorrect hotfix suffix");
+
         assertTrue(formatter.matchesFormat("$versionPrefix-$baseVersionFormat", SIMPLE_FORMAT, "halyk", "halyk-1.2.3"));
         assertFalse(formatter.matchesFormat("$versionPrefix.$baseVersionFormat", SIMPLE_FORMAT, "halyk", "halyk-1.2.3"));
 

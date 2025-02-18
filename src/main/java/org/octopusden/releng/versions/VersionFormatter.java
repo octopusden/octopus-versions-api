@@ -12,5 +12,7 @@ public interface VersionFormatter {
 
     boolean matchesFormat(String customerFormat, String versionFormat, String versionPrefix, String version);
 
+    boolean matchesFormat(String customerFormat, String versionFormat, String versionPrefix, String hotfixSuffix, String version);
+
     boolean matchesNonStrictFormat(String format, String version);
 }
