@@ -80,7 +80,7 @@ class KotlinVersionFormatterTest {
                 "$versionPrefix-$baseVersionFormat-$hotfixSuffix",
                 "$major.$minor.$service",
                 "halyk",
-                "HOTFIX$build",
+                "HOTFIX$counter",
                     NUMERIC_VERSION_FACTORY.create("1.2.3.4-5"));
         assertEquals("halyk-1.2.3-HOTFIX5", customerVersion);
     }

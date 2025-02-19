@@ -83,6 +83,14 @@ public final class NumericVersion implements IVersionInfo {
     }
 
     @Override
+    public int getCounter() {
+        if (items.size() == 0) {
+            return 0;
+        }
+        return getItem(items.size() - 1);
+    }
+
+    @Override
     public boolean isSnapshot() {
         return snapshot;
     }

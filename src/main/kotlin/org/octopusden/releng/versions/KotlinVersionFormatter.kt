@@ -28,7 +28,9 @@ class KotlinVersionFormatter(
 
             "build04" to { version: IVersionInfo -> version.buildNumber.offsetFormat(4) },
             "build02" to { version: IVersionInfo -> version.buildNumber.offsetFormat(2) },
-            "build" to { version: IVersionInfo -> version.buildNumber.toString() }
+            "build" to { version: IVersionInfo -> version.buildNumber.toString() },
+
+            "counter" to { version: IVersionInfo -> version.counter.toString() }
     )
 
     val PREDEFINED_COMPONENT_VARIABLES_LIST = listOf(

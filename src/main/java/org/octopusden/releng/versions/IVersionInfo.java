@@ -16,6 +16,8 @@ public interface IVersionInfo extends Comparable<IVersionInfo> {
 
     int getBuildNumber();
 
+    int getCounter();
+
     boolean isSnapshot();
 
     String formatVersion(String format);
