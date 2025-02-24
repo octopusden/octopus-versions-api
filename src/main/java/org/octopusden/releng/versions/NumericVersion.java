@@ -85,7 +85,7 @@ public final class NumericVersion implements IVersionInfo {
     @Override
     public int getCounter() {
         if (items.size() == 0) {
-            return 0;
+            throw new IllegalArgumentException("Version is empty");
         }
         return getItem(items.size() - 1);
     }

@@ -118,6 +118,17 @@ class NumericVersionTest {
     }
 
     @Test
+    void testParseVersionCounter() {
+        assertEquals(3, version("1.2.3").getCounter());
+        assertEquals(1, version("1.2.3-1").getCounter());
+        assertEquals(1, version("1.2.3-0001").getCounter());
+        assertEquals(2, version("1.2").getCounter());
+        assertEquals(5, version("1.2.3.4.0005").getCounter());
+        assertThrows(IllegalArgumentException.class, ()-> version("test").getCounter());
+        assertThrows(IllegalArgumentException.class, ()-> version("").getCounter());
+    }
+
+    @Test
     void testFormatVersion() {
         assertThat(VERSION_1_2_3.formatVersion("$major.$minor.$service"), equalTo(STR_V_1_2_3));
         assertThat(VERSION_1_2_3.formatVersion("MyComponent.$major.$minor.$service"), equalTo("MyComponent.1.2.3"));
