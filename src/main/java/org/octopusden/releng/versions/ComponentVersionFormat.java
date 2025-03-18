@@ -3,6 +3,7 @@ package org.octopusden.releng.versions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ComponentVersionFormat {
@@ -16,26 +17,34 @@ public final class ComponentVersionFormat {
     private String buildVersionFormat;
     @JsonProperty
     private String lineVersionFormat;
+    @JsonProperty
+    private String hotfixVersionFormat;
 
-    private ComponentVersionFormat(String releaseVersionFormat, String majorVersionFormat, String buildVersionFormat, String lineVersionFormat) {
+    private ComponentVersionFormat(String releaseVersionFormat,
+                                   String majorVersionFormat,
+                                   String buildVersionFormat,
+                                   String lineVersionFormat,
+                                   String hotfixVersionFormat) {
 //        Validate.notNull(releaseVersionFormat);
 //        Validate.notNull(majorVersionFormat);
         this.releaseVersionFormat = releaseVersionFormat;
         this.majorVersionFormat = majorVersionFormat;
         this.buildVersionFormat = buildVersionFormat;
         this.lineVersionFormat = lineVersionFormat;
+        this.hotfixVersionFormat = hotfixVersionFormat;
     }
 
     public static ComponentVersionFormat create(String majorVersionFormat, String releaseVersionFormat) {
-        return create(majorVersionFormat, releaseVersionFormat, null, null);
+        return create(majorVersionFormat, releaseVersionFormat, null, null, null);
     }
 
     @JsonCreator
     public static ComponentVersionFormat create(@JsonProperty("majorVersionFormat") String majorVersionFormat,
                                                 @JsonProperty("releaseVersionFormat") String releaseVersionFormat,
                                                 @JsonProperty("buildVersionFormat") String buildVersionFormat,
-                                                @JsonProperty("lineVersionFormat") String lineVersionFormat) {
-        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat);
+                                                @JsonProperty("lineVersionFormat") String lineVersionFormat,
+                                                @JsonProperty("hotfixVersionFormat") String hotfixVersionFormat) {
+        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat);
     }
 
     public String getReleaseVersionFormat() {
@@ -54,6 +63,10 @@ public final class ComponentVersionFormat {
         return lineVersionFormat;
     }
 
+    public String getHotfixVersionFormat() {
+        return hotfixVersionFormat;
+    }
+
     @Override
     public String toString() {
         return "ComponentVersionFormat{" +
@@ -61,6 +74,7 @@ public final class ComponentVersionFormat {
                 ", majorVersionFormat='" + majorVersionFormat + '\'' +
                 ", buildVersionFormat='" + buildVersionFormat + '\'' +
                 ", lineVersionFormat='" + lineVersionFormat + '\'' +
+                ", hotfixVersionFormat='" + hotfixVersionFormat + '\'' +
                 '}';
     }
 
@@ -74,26 +88,15 @@ public final class ComponentVersionFormat {
         }
 
         ComponentVersionFormat that = (ComponentVersionFormat) o;
-
-        if (releaseVersionFormat != null ? !releaseVersionFormat.equals(that.releaseVersionFormat) : that.releaseVersionFormat != null) {
-            return false;
-        }
-        if (majorVersionFormat != null ? !majorVersionFormat.equals(that.majorVersionFormat) : that.majorVersionFormat != null) {
-            return false;
-        }
-        if (lineVersionFormat != null ? !lineVersionFormat.equals(that.lineVersionFormat) : that.lineVersionFormat != null) {
-            return false;
-        }
-        return !(buildVersionFormat != null ? !buildVersionFormat.equals(that.buildVersionFormat) : that.buildVersionFormat != null);
-
+        return Objects.equals(releaseVersionFormat, that.releaseVersionFormat) &&
+                Objects.equals(majorVersionFormat, that.majorVersionFormat) &&
+                Objects.equals(buildVersionFormat, that.buildVersionFormat) &&
+                Objects.equals(lineVersionFormat, that.lineVersionFormat) &&
+                Objects.equals(hotfixVersionFormat, that.hotfixVersionFormat);
     }
 
     @Override
     public int hashCode() {
-        int result = releaseVersionFormat != null ? releaseVersionFormat.hashCode() : 0;
-        result = MAGIK * result + (majorVersionFormat != null ? majorVersionFormat.hashCode() : 0);
-        result = MAGIK * result + (buildVersionFormat != null ? buildVersionFormat.hashCode() : 0);
-        result = MAGIK * result + (lineVersionFormat != null ? lineVersionFormat.hashCode() : 0);
-        return result;
+        return Objects.hash(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat);
     }
 }

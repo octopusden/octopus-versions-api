@@ -9,8 +9,12 @@ class ComponentVersionFormatterTest {
     private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC");
 
     private static
-    final ComponentVersionFormat componentVersionFormat = ComponentVersionFormat.create("Model.$major.$minor.$service",
-            "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major.$minor");
+    final ComponentVersionFormat componentVersionFormat = ComponentVersionFormat.create(
+            "Model.$major.$minor.$service",
+            "Model.$major.$minor.$service.$fix",
+            "Model.$major.$minor.$service.$fix-$build",
+            "Model.$major.$minor",
+            "Model.$major.$minor.$service.$fix");
 
     private final ComponentVersionFormatter componentVersionFormatter = new ComponentVersionFormatter();
     private final IVersionInfo version = new NumericVersionFactory(VERSION_NAMES).create("1.2.3.4.5");
@@ -35,5 +39,10 @@ class ComponentVersionFormatterTest {
     @Test
     void testLineVersion() {
         assertEquals("Model.1.2", componentVersionFormatter.formatLineVersion(version, componentVersionFormat));
+    }
+
+    @Test
+    void testHotFixVersion() {
+        assertEquals("Model.1.2.3.4", componentVersionFormatter.formatHotFixVersion(version, componentVersionFormat));
     }
 }
