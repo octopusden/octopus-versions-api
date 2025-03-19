@@ -8,10 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ComponentVersionFormatMatcherTest {
 
     private static final ComponentVersionFormatMatcher matcher = new ComponentVersionFormatMatcher(new VersionNames("serviceCBranch", "serviceC", "minorC"));
-    private ComponentVersionFormat MODEL_VERSION_FORMAT = ComponentVersionFormat.create("Model.$major.$minor.$service",
-            "Model.$major.$minor.$service.$fix", "Model.$major.$minor.$service.$fix-$build", "Model.$major02.$minor02", "Model.$major.$minor.$service.$fix");
-    private ComponentVersionFormat VERSION_FORMAT = ComponentVersionFormat.create("$major02.$minorC.$serviceC",
-            "$major02.$minor02.$service02.$fix02", "$major02.$minor02.$service02.$fix02-$build", "$major02.$minor02", "Model.$major.$minor.$service.$fix");
+    private ComponentVersionFormat MODEL_VERSION_FORMAT = ComponentVersionFormat.create(
+            "Model.$major.$minor.$service",
+            "Model.$major.$minor.$service.$fix",
+            "Model.$major.$minor.$service.$fix",
+            "Model.$major02.$minor02",
+            "Model.$major.$minor.$service.$fix-$build");
+    private ComponentVersionFormat VERSION_FORMAT = ComponentVersionFormat.create(
+            "$major02.$minorC.$serviceC",
+            "$major02.$minor02.$service02.$fix02",
+            "$major02.$minor02.$service02.$fix02",
+            "$major02.$minor02",
+            "$major02.$minor02.$service02.$fix02-$build");
 
     @Test
     void testMatchesMajorVersionFormat() {
@@ -45,17 +53,17 @@ class ComponentVersionFormatMatcherTest {
 
     @Test
     void testMatchesHotfixVersionFormat() {
-        assertTrue(matcher.matchesHotfixVersionFormat(MODEL_VERSION_FORMAT, "Model.1.2.3.4"));
+        assertTrue(matcher.matchesHotfixVersionFormat(MODEL_VERSION_FORMAT, "Model.1.2.3.4-5"));
     }
 
     @Test
     void testMatchesBuildVersionFormat() {
-        assertTrue(matcher.matchesBuildVersionFormat(MODEL_VERSION_FORMAT, "Model.1.2.3.4-5"));
+        assertTrue(matcher.matchesBuildVersionFormat(MODEL_VERSION_FORMAT, "Model.1.2.3.4"));
     }
 
     @Test
     void testWrongPrefixInBuildVersionFormat() {
-        assertFalse(matcher.matchesBuildVersionFormat(MODEL_VERSION_FORMAT, "Modeler.1.2.3.4-5"));
+        assertFalse(matcher.matchesBuildVersionFormat(MODEL_VERSION_FORMAT, "Modeler.1.2.3.4"));
     }
 
     @Test
@@ -82,7 +90,7 @@ class ComponentVersionFormatMatcherTest {
         assertTrue(matcher.matchesLineVersionFormatNonStrict(MODEL_VERSION_FORMAT, "2.0"));
         assertFalse(matcher.matchesLineVersionFormatNonStrict(MODEL_VERSION_FORMAT, "2"));
 
-        assertTrue(matcher.matchesHotfixVersionFormatNonStrict(MODEL_VERSION_FORMAT, "2.0.1.0"));
+        assertTrue(matcher.matchesHotfixVersionFormatNonStrict(MODEL_VERSION_FORMAT, "2.0.1.0-1"));
         assertFalse(matcher.matchesHotfixVersionFormatNonStrict(MODEL_VERSION_FORMAT, "2.0.1"));
     }
 
@@ -91,8 +99,8 @@ class ComponentVersionFormatMatcherTest {
         assertTrue(matcher.matchesMajorVersionFormatNonStrict(VERSION_FORMAT, "03.40.29"));
         assertFalse(matcher.matchesMajorVersionFormatNonStrict(VERSION_FORMAT, "03.02"));
 
-        assertFalse(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30.29"));
-        assertTrue(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30.29-4"));
+        assertFalse(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30"));
+        assertTrue(matcher.matchesBuildVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.40.30.29"));
 
         assertFalse(matcher.matchesReleaseVersionFormatNonStrict(MODEL_VERSION_FORMAT, "03.39.49"));
         assertTrue(matcher.matchesReleaseVersionFormatNonStrict(MODEL_VERSION_FORMAT, "4.54.3.23"));

@@ -46,7 +46,7 @@ public final class ComponentVersionFormatMatcher {
     }
 
     public boolean matchesHotfixVersionFormatNonStrict(ComponentVersionFormat componentVersionFormat, String version) {
-        return formatter.matchesNonStrictFormat(componentVersionFormat.getReleaseVersionFormat(), version);
+        return formatter.matchesNonStrictFormat(componentVersionFormat.getHotfixVersionFormat(), version);
     }
 
 }
