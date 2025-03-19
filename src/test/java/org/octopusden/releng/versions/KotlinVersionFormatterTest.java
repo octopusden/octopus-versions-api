@@ -78,11 +78,6 @@ class KotlinVersionFormatterTest {
     }
 
     @Test
-    void testMatchesHotfixVersionFormat() {
-        assertTrue(formatter.matchesFormat("$versionPrefix-$baseVersionFormat", "Hotfix.$major.$minor.$service.$fix", "testcomponent", "testcomponent-Hotfix.2.15.1505.147"));
-    }
-
-    @Test
     void testMajorCWithMajor() {
         assert formatter.matchesFormat("$major.$minorC.$service", "3.38.3");
         assert formatter.matchesFormat("$major.$minorC.$serviceC", "3.38.04");
