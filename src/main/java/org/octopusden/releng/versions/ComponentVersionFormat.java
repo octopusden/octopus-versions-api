@@ -8,7 +8,6 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ComponentVersionFormat {
 
-    private static final int MAGIK = 31;
     @JsonProperty
     private String majorVersionFormat;
     @JsonProperty
