@@ -20,7 +20,24 @@ class ComponentVersionFormatMatcherTest {
             "$major02.$minor02.$service02.$fix02",
             "$major02.$minor02",
             "$major02.$minor02.$service02.$fix02-$build");
+    private ComponentVersionFormat SIMPLE_VERSION_FORMAT = ComponentVersionFormat.create(
+            "$major.$minor",
+            "$major.$minor.$service",
+            "$major.$minor.$service.$fix",
+            "$major02.$minor02",
+            "$major.$minor.$service.$fix-$build");
 
+    @Test
+    void testMatchesVersionFormat() {
+        assertTrue(matcher.matchesMajorVersionFormat(SIMPLE_VERSION_FORMAT, "1.2"));
+        assertFalse(matcher.matchesMajorVersionFormat(SIMPLE_VERSION_FORMAT, "1.2.3"));
+
+        assertTrue(matcher.matchesReleaseVersionFormat(SIMPLE_VERSION_FORMAT, "1.2.3"));
+        assertFalse(matcher.matchesReleaseVersionFormat(SIMPLE_VERSION_FORMAT, "1.2"));
+
+        assertTrue(matcher.matchesHotfixVersionFormat(SIMPLE_VERSION_FORMAT, "1.2.3.4-5"));
+        assertFalse(matcher.matchesHotfixVersionFormat(SIMPLE_VERSION_FORMAT, "1.2.3"));
+    }
     @Test
     void testMatchesMajorVersionFormat() {
         assertTrue(matcher.matchesMajorVersionFormat(MODEL_VERSION_FORMAT, "Model.1.2.3"));
