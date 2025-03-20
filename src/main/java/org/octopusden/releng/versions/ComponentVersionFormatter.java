@@ -18,4 +18,7 @@ public class ComponentVersionFormatter {
         return versionInfo.formatVersion(componentVersionFormat.getLineVersionFormat());
     }
 
+    public String formatHotFixVersion(IVersionInfo versionInfo, ComponentVersionFormat componentVersionFormat) {
+        return versionInfo.formatVersion(componentVersionFormat.getHotfixVersionFormat());
+    }
 }

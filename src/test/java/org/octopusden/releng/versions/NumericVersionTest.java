@@ -9,12 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class NumericVersionTest {
     private static final String STR_V_1_2_3_4 = "1.2.3.4";
     private static final String STR_V_1_2_3 = "1.2.3";
-    private static final IVersionInfo VERSION_1_2_3_4 = version(STR_V_1_2_3_4);
 
     private static final VersionNames VERSION_NAMES = new VersionNames("serviceCBranch", "serviceC", "minorC");
 
     private static final NumericVersionFactory NUMBER_VERSION_FACTORY = new NumericVersionFactory(VERSION_NAMES);
     private static final IVersionInfo VERSION_1_2_3 = NUMBER_VERSION_FACTORY.create(STR_V_1_2_3);
+
+    private static final IVersionInfo VERSION_1_2_3_4 = version(STR_V_1_2_3_4);
 
     private static IVersionInfo version(String version) {
         return NUMBER_VERSION_FACTORY.create(version);
