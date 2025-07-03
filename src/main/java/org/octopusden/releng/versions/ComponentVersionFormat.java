@@ -19,22 +19,26 @@ public final class ComponentVersionFormat {
     @JsonProperty
     private String hotfixVersionFormat;
 
+    private final boolean isHotfix ;
+
     private ComponentVersionFormat(String releaseVersionFormat,
                                    String majorVersionFormat,
                                    String buildVersionFormat,
                                    String lineVersionFormat,
-                                   String hotfixVersionFormat) {
-//        Validate.notNull(releaseVersionFormat);
-//        Validate.notNull(majorVersionFormat);
+                                   String hotfixVersionFormat,
+                                   boolean isHotfix) {
         this.releaseVersionFormat = releaseVersionFormat;
         this.majorVersionFormat = majorVersionFormat;
         this.buildVersionFormat = buildVersionFormat;
         this.lineVersionFormat = lineVersionFormat;
-        this.hotfixVersionFormat = hotfixVersionFormat;
+        this.isHotfix = isHotfix;
+        if (isHotfix) {
+            this.hotfixVersionFormat = hotfixVersionFormat;
+        }
     }
 
     public static ComponentVersionFormat create(String majorVersionFormat, String releaseVersionFormat) {
-        return create(majorVersionFormat, releaseVersionFormat, null, null, null);
+        return create(majorVersionFormat, releaseVersionFormat, null, null, null, false);
     }
 
     @JsonCreator
@@ -42,8 +46,9 @@ public final class ComponentVersionFormat {
                                                 @JsonProperty("releaseVersionFormat") String releaseVersionFormat,
                                                 @JsonProperty("buildVersionFormat") String buildVersionFormat,
                                                 @JsonProperty("lineVersionFormat") String lineVersionFormat,
-                                                @JsonProperty("hotfixVersionFormat") String hotfixVersionFormat) {
-        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat);
+                                                @JsonProperty("hotfixVersionFormat") String hotfixVersionFormat,
+                                                boolean isHotfix) {
+        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat, isHotfix);
     }
 
     public String getReleaseVersionFormat() {
@@ -74,6 +79,7 @@ public final class ComponentVersionFormat {
                 ", buildVersionFormat='" + buildVersionFormat + '\'' +
                 ", lineVersionFormat='" + lineVersionFormat + '\'' +
                 ", hotfixVersionFormat='" + hotfixVersionFormat + '\'' +
+                ", isHotfix=" + isHotfix +
                 '}';
     }
 
