@@ -60,10 +60,11 @@ class KotlinVersionFormatter(
             customerFormat.expandContext(PREDEFINED_COMPONENT_VARIABLES_LIST
                     .map { (key, value) -> key to value(format(versionFormat, version), versionPrefix) }.toMap())
 
-    override fun matchesFormat(format: String, version: String): Boolean {
-        val numericVersion = numericVersionFactory.create(version)
-        val patchedFormat = getPatchedFormat(format)
-        return version == format(patchedFormat, numericVersion)
+    override fun matchesFormat(format: String?, version: String): Boolean {
+        return format?.let {
+            val numericVersion = numericVersionFactory.create(version)
+            version == format(getPatchedFormat(it), numericVersion)
+        } ?: false
     }
 
     override fun matchesFormat(customerFormat: String, versionFormat: String, versionPrefix: String, version: String): Boolean {
@@ -77,13 +78,15 @@ class KotlinVersionFormatter(
             .replace("\$${versionNames.minor}", "\$minor02")
 
 
-    override fun matchesNonStrictFormat(format: String, version: String): Boolean {
-        var tempFormat = format
-        val predefinedVariableCount = PREDEFINED_VARIABLES_LIST.filter {
-            val res = tempFormat.contains(it.first.substring(1))
-            tempFormat = tempFormat.replace(it.first, "")
-            res
-        }.size
+    override fun matchesNonStrictFormat(format: String?, version: String): Boolean {
+        if (format == null)  return false
+
+        var tempFormat : String = format
+        val predefinedVariableCount = PREDEFINED_VARIABLES_LIST.count {
+            tempFormat.contains(it.first.substring(1)).also { found ->
+                if (found) tempFormat = tempFormat.replace(it.first, "")
+            }
+        }
         return predefinedVariableCount <= numericVersionFactory.create(version).itemsCount
     }
 
