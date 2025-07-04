@@ -18,6 +18,8 @@ public final class ComponentVersionFormat {
     private String lineVersionFormat;
     @JsonProperty
     private String hotfixVersionFormat;
+    @JsonProperty
+    private final boolean isHotfixEnabled;
 
     private ComponentVersionFormat(String releaseVersionFormat,
                                    String majorVersionFormat,
@@ -30,6 +32,7 @@ public final class ComponentVersionFormat {
         this.buildVersionFormat = buildVersionFormat;
         this.lineVersionFormat = lineVersionFormat;
         this.hotfixVersionFormat = isHotfixEnabled ? hotfixVersionFormat : null;
+        this.isHotfixEnabled = isHotfixEnabled;
     }
 
     public static ComponentVersionFormat create(String majorVersionFormat, String releaseVersionFormat) {
@@ -74,6 +77,7 @@ public final class ComponentVersionFormat {
                 ", buildVersionFormat='" + buildVersionFormat + '\'' +
                 ", lineVersionFormat='" + lineVersionFormat + '\'' +
                 ", hotfixVersionFormat='" + hotfixVersionFormat + '\'' +
+                ", isHotfixEnabled=" + isHotfixEnabled + '\'' +
                 '}';
     }
 
@@ -91,7 +95,8 @@ public final class ComponentVersionFormat {
                 Objects.equals(majorVersionFormat, that.majorVersionFormat) &&
                 Objects.equals(buildVersionFormat, that.buildVersionFormat) &&
                 Objects.equals(lineVersionFormat, that.lineVersionFormat) &&
-                Objects.equals(hotfixVersionFormat, that.hotfixVersionFormat);
+                Objects.equals(hotfixVersionFormat, that.hotfixVersionFormat) &&
+                isHotfixEnabled == that.isHotfixEnabled;
     }
 
     @Override
