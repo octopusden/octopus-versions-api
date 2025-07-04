@@ -42,7 +42,7 @@ public final class ComponentVersionFormat {
                                                 @JsonProperty("buildVersionFormat") String buildVersionFormat,
                                                 @JsonProperty("lineVersionFormat") String lineVersionFormat,
                                                 @JsonProperty("hotfixVersionFormat") String hotfixVersionFormat,
-                                                boolean isHotfixEnabled) {
+                                                @JsonProperty("isHotfixEnabled") boolean isHotfixEnabled) {
         return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat, isHotfixEnabled);
     }
 
