@@ -19,22 +19,17 @@ public final class ComponentVersionFormat {
     @JsonProperty
     private String hotfixVersionFormat;
 
-    private final boolean isHotfix ;
-
     private ComponentVersionFormat(String releaseVersionFormat,
                                    String majorVersionFormat,
                                    String buildVersionFormat,
                                    String lineVersionFormat,
                                    String hotfixVersionFormat,
-                                   boolean isHotfix) {
+                                   boolean isHotfixEnabled) {
         this.releaseVersionFormat = releaseVersionFormat;
         this.majorVersionFormat = majorVersionFormat;
         this.buildVersionFormat = buildVersionFormat;
         this.lineVersionFormat = lineVersionFormat;
-        this.isHotfix = isHotfix;
-        if (isHotfix) {
-            this.hotfixVersionFormat = hotfixVersionFormat;
-        }
+        this.hotfixVersionFormat = isHotfixEnabled ? hotfixVersionFormat : null;
     }
 
     public static ComponentVersionFormat create(String majorVersionFormat, String releaseVersionFormat) {
@@ -47,8 +42,8 @@ public final class ComponentVersionFormat {
                                                 @JsonProperty("buildVersionFormat") String buildVersionFormat,
                                                 @JsonProperty("lineVersionFormat") String lineVersionFormat,
                                                 @JsonProperty("hotfixVersionFormat") String hotfixVersionFormat,
-                                                boolean isHotfix) {
-        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat, isHotfix);
+                                                boolean isHotfixEnabled) {
+        return new ComponentVersionFormat(releaseVersionFormat, majorVersionFormat, buildVersionFormat, lineVersionFormat, hotfixVersionFormat, isHotfixEnabled);
     }
 
     public String getReleaseVersionFormat() {
@@ -79,7 +74,6 @@ public final class ComponentVersionFormat {
                 ", buildVersionFormat='" + buildVersionFormat + '\'' +
                 ", lineVersionFormat='" + lineVersionFormat + '\'' +
                 ", hotfixVersionFormat='" + hotfixVersionFormat + '\'' +
-                ", isHotfix=" + isHotfix +
                 '}';
     }
 

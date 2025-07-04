@@ -13,19 +13,19 @@ class ComponentVersionFormatMatcherTest {
             "Model.$major.$minor.$service.$fix",
             "Model.$major.$minor.$service.$fix",
             "Model.$major02.$minor02",
-            "Model.$major.$minor.$service.$fix-$build");
+            "Model.$major.$minor.$service.$fix-$build", true);
     private ComponentVersionFormat VERSION_FORMAT = ComponentVersionFormat.create(
             "$major02.$minorC.$serviceC",
             "$major02.$minor02.$service02.$fix02",
             "$major02.$minor02.$service02.$fix02",
             "$major02.$minor02",
-            "$major02.$minor02.$service02.$fix02-$build");
+            "$major02.$minor02.$service02.$fix02-$build", true);
     private ComponentVersionFormat SIMPLE_VERSION_FORMAT = ComponentVersionFormat.create(
             "$major.$minor",
             "$major.$minor.$service",
             "$major.$minor.$service.$fix",
             "$major02.$minor02",
-            "$major.$minor.$service.$fix-$build");
+            "$major.$minor.$service.$fix-$build", false);
 
     @Test
     void testMatchesVersionFormat() {
