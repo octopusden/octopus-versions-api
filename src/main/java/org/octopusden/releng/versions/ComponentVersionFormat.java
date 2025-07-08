@@ -69,6 +69,11 @@ public final class ComponentVersionFormat {
         return hotfixVersionFormat;
     }
 
+    public boolean isHotfixEnabled() {
+        return isHotfixEnabled;
+    }
+
+
     @Override
     public String toString() {
         return "ComponentVersionFormat{" +
