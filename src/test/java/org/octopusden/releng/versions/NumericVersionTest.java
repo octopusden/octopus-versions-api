@@ -59,6 +59,26 @@ class NumericVersionTest {
     }
 
     @Test
+    void testLabelledSegmentsAreSkipped() {
+        // Non-numeric segments must be dropped (not parsed), keeping only the numeric ones.
+        assertEquals(3, version("1.2.3-rc1").getItemsCount());
+        assertThat(1, equalTo(version("1.2.3-rc1").getItem(0)));
+        assertThat(2, equalTo(version("1.2.3-rc1").getItem(1)));
+        assertThat(3, equalTo(version("1.2.3-rc1").getItem(2)));
+
+        assertEquals(3, version("1.2.3.Final").getItemsCount());
+        assertEquals(4, version("name-1.2.3-456").getItemsCount());
+    }
+
+    @Test
+    void testOutOfRangeSegmentIsSkipped() {
+        // A digit-only segment that overflows int must be skipped, not parsed.
+        assertEquals(2, version("1.99999999999999999.2").getItemsCount());
+        assertThat(1, equalTo(version("1.99999999999999999.2").getItem(0)));
+        assertThat(2, equalTo(version("1.99999999999999999.2").getItem(1)));
+    }
+
+    @Test
     void testNull() {
         assertThrows(NullPointerException.class, ()-> version(null));
     }
