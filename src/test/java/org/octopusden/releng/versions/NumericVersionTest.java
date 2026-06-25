@@ -71,6 +71,14 @@ class NumericVersionTest {
     }
 
     @Test
+    void testCreateFromIntElements() {
+        // create(int...) builds a dotted string and delegates to create(String).
+        assertThat(NUMBER_VERSION_FACTORY.create(1, 2, 3), equalTo(VERSION_1_2_3));
+        assertEquals(STR_V_1_2_3, NUMBER_VERSION_FACTORY.create(1, 2, 3).toString());
+        assertEquals(1, NUMBER_VERSION_FACTORY.create(1).getItemsCount());
+    }
+
+    @Test
     void testOutOfRangeSegmentIsSkipped() {
         // A digit-only segment that overflows int must be skipped, not parsed.
         assertEquals(2, version("1.99999999999999999.2").getItemsCount());
