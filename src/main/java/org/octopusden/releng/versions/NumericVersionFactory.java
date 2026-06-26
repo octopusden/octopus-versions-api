@@ -44,11 +44,13 @@ public class NumericVersionFactory {
      */
     private static Integer parseNonNegativeInt(String segment) {
         int length = segment.length();
-        if (length == 0) {
+        // Integer.parseInt accepts a single leading '+', so preserve that (a lone '+' is not a number).
+        int start = (length > 0 && segment.charAt(0) == '+') ? 1 : 0;
+        if (start == length) {
             return null;
         }
         long value = 0;
-        for (int i = 0; i < length; i++) {
+        for (int i = start; i < length; i++) {
             char c = segment.charAt(i);
             if (c < '0' || c > '9') {
                 return null;

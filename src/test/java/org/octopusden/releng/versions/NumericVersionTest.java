@@ -79,11 +79,33 @@ class NumericVersionTest {
     }
 
     @Test
+    void testLeadingPlusSegmentMatchesParseInt() {
+        // Integer.parseInt accepts a single leading '+', so the old parseInt-based code parsed
+        // such segments; behaviour must stay unchanged (issue #30).
+        assertEquals(2, version("+1.2").getItemsCount());
+        assertThat(1, equalTo(version("+1.2").getItem(0)));
+        assertThat(2, equalTo(version("+1.2").getItem(1)));
+        // a lone '+', a doubled '++3', or a misplaced '+' are not valid ints -> skipped, as before
+        assertEquals(2, version("1.+.2").getItemsCount());
+        assertEquals(2, version("1.++3.2").getItemsCount());
+    }
+
+    @Test
     void testOutOfRangeSegmentIsSkipped() {
         // A digit-only segment that overflows int must be skipped, not parsed.
         assertEquals(2, version("1.99999999999999999.2").getItemsCount());
         assertThat(1, equalTo(version("1.99999999999999999.2").getItem(0)));
         assertThat(2, equalTo(version("1.99999999999999999.2").getItem(1)));
+    }
+
+    @Test
+    void testIntBoundaryParsing() {
+        // Integer.MAX_VALUE is parsed; MAX_VALUE + 1 overflows and is skipped.
+        assertThat(Integer.MAX_VALUE, equalTo(version("1." + Integer.MAX_VALUE).getItem(1)));
+        assertEquals(1, version("1.2147483648").getItemsCount());
+        // Leading zeros are accepted (parseInt parity), even past 10 chars - a length check would be wrong.
+        assertThat(2, equalTo(version("1.00000000002").getItem(1)));
+        assertEquals(2, version("1.00000000002").getItemsCount());
     }
 
     @Test
