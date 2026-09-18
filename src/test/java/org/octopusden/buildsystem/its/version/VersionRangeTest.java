@@ -1,6 +1,11 @@
 package org.octopusden.buildsystem.its.version;
 
-import org.octopusden.releng.versions.*;
+import org.octopusden.releng.versions.IVersionInfo;
+import org.octopusden.releng.versions.VersionNames;
+import org.octopusden.releng.versions.VersionRange;
+import org.octopusden.releng.versions.VersionRangeFactory;
+import org.octopusden.releng.versions.NumericVersionFactory;
+import org.octopusden.releng.versions.VersionRangeImpl;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -15,7 +20,9 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VersionRangeTest {
 
