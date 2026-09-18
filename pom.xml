@@ -16,6 +16,11 @@
     <name>Octopus Versions API</name>
 
     <properties>
+        <!-- Ratchet, not the inherited 0.10: LINE coverage here is 90%, so the default floor could not fail
+             on anything short of deleting the tests. Set just below the real figure and raised as coverage
+             improves; never lowered. Like the analysers, it takes effect only once the build JDK moves to
+             11+: the quality profiles do not activate on the JDK 8 this repository builds on in CI. -->
+        <octopus.coverage.minimumLine>0.85</octopus.coverage.minimumLine>
         <findbugs.skip>true</findbugs.skip>
         <kotlin.version>1.3.50</kotlin.version>
     </properties>
