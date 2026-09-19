@@ -123,6 +123,9 @@ public final class VersionRangeImpl implements VersionRange {
             hardVersion = left != null &&  right != null && left.compareTo(right) == 0;
         }
 
+        // PMD 6 cannot see calls made through a lambda on a stream of the enclosing type, so it reports
+        // this as unused. It is called from containsVersion and isIntersect above.
+        @SuppressWarnings("PMD.UnusedPrivateMethod")
         private boolean containsVersion(final IVersionInfo version) {
             Objects.requireNonNull(version, "Version can't be null");
             if (left != null && (includeLeft && left.compareTo(version) > 0 || !includeLeft && (left.compareTo(version) >= 0))) {
