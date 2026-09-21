@@ -1,0 +1,33 @@
+name: Quality Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# The analysers read the repository and nothing else.
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    # Checkstyle, PMD, detekt, ktlint and the JaCoCo coverage floor come from octopus-parent, whose
+    # octopus-quality profile activates on <jdk>[11,)</jdk>. Compile and release run on JDK 8 (see
+    # build.yml and release.yml), so on those runs the profile never activates and no gate executes -
+    # the 0.85 coverage floor in pom.xml has never been enforced. This job exists to give the gates a
+    # JVM they run on; the artefacts it builds are thrown away.
+    #
+    # SpotBugs is not in that list on purpose: src/main/kotlin exists here, so the parent's Kotlin
+    # profile sets spotbugs.skip=true. The goal still appears in the reactor log, but it no-ops and
+    # writes no spotbugsXml.xml.
+    #
+    # -Dmaven.javadoc.skip=true is a workaround, not a preference. javadoc cannot resolve
+    # VersionNames - a Kotlin class in this same module - on JDK 11 and above, so `mvn package` fails
+    # before reaching the gates. Verified on JDK 11 specifically, not extrapolated from a newer JDK.
+    # The release builds javadoc on Java 8, where it succeeds, so nothing shipped is affected.
+    # Remove this flag once octopusden/octopus-parent#4 is fixed.
+    uses: octopusden/octopus-base/.github/workflows/common-java-maven-build.yml@v3.0.3
+    with:
+      java-version: '11'
+      mvn-parameters: '-Dmaven.javadoc.skip=true'
