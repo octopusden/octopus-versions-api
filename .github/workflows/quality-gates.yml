@@ -22,11 +22,10 @@ jobs:
     # profile sets spotbugs.skip=true. The goal still appears in the reactor log, but it no-ops and
     # writes no spotbugsXml.xml.
     #
-    # -Dmaven.javadoc.skip=true is a workaround, not a preference. javadoc cannot resolve
-    # VersionNames - a Kotlin class in this same module - on JDK 11 and above, so `mvn package` fails
-    # before reaching the gates. Verified on JDK 11 specifically, not extrapolated from a newer JDK.
-    # The release builds javadoc on Java 8, where it succeeds, so nothing shipped is affected.
-    # Remove this flag once octopusden/octopus-parent#4 is fixed.
+    # -Dmaven.javadoc.skip=true is a workaround, not a preference: javadoc cannot resolve
+    # VersionNames - a Kotlin class in this same module - on JDK 11 and above, so `mvn package`
+    # fails before reaching the gates. The release builds javadoc on Java 8, where it succeeds, so
+    # nothing shipped is affected. Drop the flag when javadoc resolves same-module Kotlin.
     uses: octopusden/octopus-base/.github/workflows/common-java-maven-build.yml@v3.0.3
     with:
       java-version: '11'
