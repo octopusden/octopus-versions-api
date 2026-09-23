@@ -8,12 +8,15 @@ class KotlinVersionFormatter(
 ) : VersionFormatter {
     private val numericVersionFactory: NumericVersionFactory = NumericVersionFactory(versionNames)
 
-    // TODO: make static
+    // Not in a companion object, though it looks like a constant: every entry closes over versionNames,
+    // which is a constructor parameter, so the list cannot be built before an instance exists. Hoisting
+    // it would mean passing versionNames into each lambda instead.
+    //
     // Suppressed, not renamed: these three are public properties of a published library, so camelCasing
     // them is a breaking change for every consumer of octopus-versions-api. ktlint has no ratchet, so
     // without this the whole repository would have to stay advisory for three names. Rename them behind
     // a deprecation cycle if the API is ever revised.
-    @Suppress("ktlint:standard:property-naming")
+    @Suppress("ktlint:standard:property-naming", "VariableNaming")
     val PREDEFINED_VARIABLES_LIST: List<Pair<String, (IVersionInfo) -> String>> = listOf(
         versionNames.serviceBranch to { version: IVersionInfo -> calculateServiceCBranch(version).offsetFormat(2) },
         versionNames.service to { version: IVersionInfo -> calculateServiceC(version).offsetFormat(2) },
@@ -32,13 +35,13 @@ class KotlinVersionFormatter(
         "build" to { version: IVersionInfo -> version.buildNumber.toString() }
     )
 
-    @Suppress("ktlint:standard:property-naming")
+    @Suppress("ktlint:standard:property-naming", "VariableNaming")
     val PREDEFINED_COMPONENT_VARIABLES_LIST = listOf(
         "versionPrefix" to { version: String, versionPrefix: String -> versionPrefix },
         "baseVersionFormat" to { version: String, versionPrefix: String -> version }
     )
 
-    @Suppress("ktlint:standard:property-naming")
+    @Suppress("ktlint:standard:property-naming", "VariableNaming")
     val PREDEFINED_POSTPROCESSOR_LIST = listOf(
         "module" to { componentName: String, _: String -> componentName },
         "version" to { _: String, version: String -> version },
