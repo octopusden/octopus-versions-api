@@ -1,0 +1,20 @@
+name: Quality Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# The analysers read the repository and nothing else.
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    # The normal JDK 8 builds never activate octopus-parent's quality profile.
+    # javadoc.skip works around javadoc not resolving same-module Kotlin; remove it when fixed.
+    uses: octopusden/octopus-base/.github/workflows/common-java-maven-build.yml@v3.0.3
+    with:
+      java-version: '11'
+      mvn-parameters: '-Dmaven.javadoc.skip=true'

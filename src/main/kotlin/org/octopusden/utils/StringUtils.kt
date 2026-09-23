@@ -1,6 +1,9 @@
 package org.octopusden.utils
 
-fun String.expandContext(context: Map<String, String>, expandEnv: Boolean): String {
+fun String.expandContext(
+    context: Map<String, String>,
+    expandEnv: Boolean
+): String {
     if (this.indexOf('$') == -1) return this
 
     val sb = StringBuilder()
@@ -36,5 +39,7 @@ fun String.expandContext(context: Map<String, String>, expandEnv: Boolean): Stri
 
 fun String.expandContext(context: Map<String, String>): String = expandContext(context, false)
 
-inline fun String.indexOf(start: Int = 0, predicate: (Char) -> Boolean): Int =
-        (start until this.length).firstOrNull { predicate(this[it]) } ?: -1
+inline fun String.indexOf(
+    start: Int = 0,
+    predicate: (Char) -> Boolean
+): Int = (start until this.length).firstOrNull { predicate(this[it]) } ?: -1
