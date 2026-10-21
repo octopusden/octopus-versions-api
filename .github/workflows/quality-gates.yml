@@ -1,9 +1,10 @@
 name: Quality Gates
 
+# Pull requests run this through merge-gate.yml, not on their own.
 on:
-  pull_request:
   push:
     branches: [main]
+  workflow_call:
   workflow_dispatch:
 
 # The analysers read the repository and nothing else.
