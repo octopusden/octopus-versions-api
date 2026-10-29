@@ -31,15 +31,15 @@ class KotlinVersionFormatterTest {
         assertEquals("MyComponent.1.2.3", formatter.format(COMPONENT_FORMAT, NUMERIC_VERSION_FACTORY.create("1.2.3")));
         assertEquals("01.4000.00.444", formatter.format("$major02.${minor02}.$service02.$fix02", NUMERIC_VERSION_FACTORY.create("1.4000.0.444")));
 
-        assert formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3");
-        assert !formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3-4");
+        assertTrue(formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3"));
+        assertFalse(formatter.matchesFormat(SIMPLE_FORMAT, "1.2.3-4"));
 
-        assert formatter.matchesFormat(COMPONENT_FORMAT, "MyComponent.1.2.34");
-        assert formatter.matchesFormat("MyComponent.$major.$minor.$service", "MyComponent.1.2.34");
-        assert formatter.matchesFormat("MyComponent-$major.$minor.$service", "MyComponent-1.2.34");
-        assert !formatter.matchesFormat("MyComponent.$major.$minor.$service", "MyComponent2.1.2.34");
+        assertTrue(formatter.matchesFormat(COMPONENT_FORMAT, "MyComponent.1.2.34"));
+        assertTrue(formatter.matchesFormat("MyComponent.$major.$minor.$service", "MyComponent.1.2.34"));
+        assertTrue(formatter.matchesFormat("MyComponent-$major.$minor.$service", "MyComponent-1.2.34"));
+        assertFalse(formatter.matchesFormat("MyComponent.$major.$minor.$service", "MyComponent2.1.2.34"));
 
-        assert formatter.matchesFormat("$major02.$minor02.$service02.$fix02", "00.02.34.23");
+        assertTrue(formatter.matchesFormat("$major02.$minor02.$service02.$fix02", "00.02.34.23"));
     }
 
     @Test
@@ -81,8 +81,8 @@ class KotlinVersionFormatterTest {
 
     @Test
     void testMajorCWithMajor() {
-        assert formatter.matchesFormat("$major.$minorC.$service", "3.38.3");
-        assert formatter.matchesFormat("$major.$minorC.$serviceC", "3.38.04");
+        assertTrue(formatter.matchesFormat("$major.$minorC.$service", "3.38.3"));
+        assertTrue(formatter.matchesFormat("$major.$minorC.$serviceC", "3.38.04"));
     }
 
     @Test
